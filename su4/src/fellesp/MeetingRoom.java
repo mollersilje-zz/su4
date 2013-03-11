@@ -1,5 +1,6 @@
 package fellesp;
 
 public class MeetingRoom {
-	private int a;
+	private int aa = 0;
+	private String paa = "Hello";
 }
