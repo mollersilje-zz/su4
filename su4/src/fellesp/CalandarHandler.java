@@ -2,13 +2,23 @@ package fellesp;
 
 public class CalandarHandler{
    
-   private Employee employee = new Employee(username, password);
+   private boolean LoggedIn=false;
+   private Employee employee;
    
-   public boolean LogIn(String username, String password1){
+ //  public CalendarHandler(Employee employee){
+   //   this.employee=employee;
+   //}
+   
+   public void LogIn(String username, String password1){
      //SPØRRING:password2 =select password from Employee as e where username=e.username
      if password1=password2{
-       return true;
+       LoggedIn=True;
      }
    }
+   
+   public void LogOut(){
+      LoggedIn=false;
+   }
+   
    
 }
