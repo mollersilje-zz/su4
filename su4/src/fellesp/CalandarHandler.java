@@ -10,9 +10,10 @@ public class CalandarHandler{
    //}
    
    public void LogIn(String username, String password1){
-     //SPØRRING:password2 =select password from Employee as e where username=e.username
-     if password1=password2{
-       LoggedIn=True;
+     String password2 = null;
+	   //SPØRRING:password2 =select password from Employee as e where username=e.username
+     if (password1.equals(password2)) {
+       LoggedIn = true;
      }
    }
    

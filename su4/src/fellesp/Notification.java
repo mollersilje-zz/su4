@@ -8,7 +8,7 @@ public class Notification {
 	private int i;
 
 	public Notification() {
-		this.i;
+		//this.i;
 	}
 	public Time getAlarm() {
 		return alarm;

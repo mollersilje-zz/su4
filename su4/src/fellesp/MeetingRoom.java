@@ -5,7 +5,7 @@ public class MeetingRoom {
 	private int capacity;
 	
 	public MeetingRoom(int Roomnumber, int capacity){
-		this.Roomnumber=Roomnumber;
+		this.RoomNumber=Roomnumber;
 		this.capacity=capacity;
 	}
 	
