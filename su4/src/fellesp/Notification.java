@@ -32,4 +32,7 @@ public class Notification {
 		return false;
 	}
 	
+	
+	Kake
+	
 }
