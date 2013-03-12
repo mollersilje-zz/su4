@@ -19,7 +19,9 @@ public class Notification {
 	}
 	
 	public int response(int i){
-		if (i = )
+		if (i = 1){return 1;}
+		if else (i = 2){return 2;}
+		else (i = 3){return 3;}
 	}
 	
 	public boolean acceptInvite(){
