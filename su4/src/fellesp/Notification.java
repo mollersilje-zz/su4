@@ -31,4 +31,6 @@ public class Notification {
 	public boolean rejectInvite(){
 		return false;
 	}
+	
+	Hei
 }
