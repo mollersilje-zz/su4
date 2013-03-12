@@ -8,7 +8,7 @@ public class Notification {
 	private int i;
 
 	public Notification() {
-		this.i
+		this.i;
 	}
 	public Time getAlarm() {
 		return alarm;
@@ -19,9 +19,9 @@ public class Notification {
 	}
 	
 	public int response(int i){
-		if (i = 1){return 1;}
-		if else (i = 2){return 2;}
-		else (i = 3){return 3;}
+		if (i == 1){return 1;}
+		else if (i == 2){return 2;}
+		else {return 3;}
 	}
 	
 	public boolean acceptInvite(){
@@ -31,8 +31,5 @@ public class Notification {
 	public boolean rejectInvite(){
 		return false;
 	}
-	
-	
-	Kake
 	
 }
