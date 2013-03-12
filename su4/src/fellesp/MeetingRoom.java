@@ -1,5 +1,8 @@
 package fellesp;
 
+import java.sql.Date;
+import java.sql.Time;
+
 public class MeetingRoom {
 	private int RoomNumber;
 	private int capacity;
@@ -23,5 +26,10 @@ public class MeetingRoom {
 	
 	public void setCapacity(int capacity){
 		this.capacity=capacity;
+	}
+
+	public boolean isAvailable(Date date, Time startTime, Time endTime) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

@@ -22,6 +22,7 @@ public class Appointment {
 		this.endTime = endTime;
 		this.des = des;
 		this.type = type;
+		this.owner = owner;
 	}
 	
 	public Date getDate(){
@@ -33,15 +34,15 @@ public class Appointment {
 	public Time getEndTime(){
 		return endTime;
 	}
-	public Arraylist<MeetingRoom> ReserveRoom(date, startTime, endTime, type){
-		rooms = new ArrayList<MeetingRoom>();
+	public ArrayList<MeetingRoom> ReserveRoom(Date date, Time startTime, Time endTime, boolean type, int participants){
+		ArrayList<MeetingRoom> rooms = new ArrayList<MeetingRoom>();//Henter rom fra database hvor capacity >= participants
+		ArrayList<MeetingRoom> availableRooms = new ArrayList<MeetingRoom>();
 		for (int i = 0;i < rooms.size(); i++){
-			if (i.date != date){
-				return rooms;
-			}else{
-				if((i.startTime > startTime) && (i.endTime <= endTime))
+			if (rooms.get(i).isAvailable(date, startTime, endTime)){
+				availableRooms.add(rooms.get(i));
 			}
 		}
+	return availableRooms;
 	}
 	
 	public String getDes(){
