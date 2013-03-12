@@ -1,4 +1,4 @@
-package prosjekt;
+package fellesp;
 
 import java.util.ArrayList;
 import java.sql.Date;
@@ -33,7 +33,7 @@ public class Appointment {
 	public Time getEndTime(){
 		return endTime;
 	}
-	public Arraylist<MeetingRoom> ReserveRoom(date, startTime, endTime, type){
+	public ArrayList<MeetingRoom> ReserveRoom(Date date, Time startTime, Time endTime, boolean type){
 		rooms = new ArrayList<MeetingRoom>();
 		for (int i = 0;i < rooms.size(); i++){
 			if (i.date != date){
