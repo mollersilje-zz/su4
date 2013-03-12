@@ -6,6 +6,9 @@ public class Notification {
 	
 	private Time alarm;
 
+	public Notification() {
+		
+	}
 	public Time getAlarm() {
 		return alarm;
 	}
@@ -15,9 +18,7 @@ public class Notification {
 	}
 	
 	public boolean acceptInvite(){
-		
 		return false;
-		
 	}
 	
 	public boolean rejectInvite(){
