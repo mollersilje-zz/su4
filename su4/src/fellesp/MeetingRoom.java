@@ -17,11 +17,4 @@ public class MeetingRoom {
 		return this.capacity;
 	}
 	
-	public void setRoomNumber(int roomNumber){
-		this.RoomNumber=roomNumber;
-	}
-	
-	public void setCapacity(int capacity){
-		this.capacity=capacity;
-	}
 }
