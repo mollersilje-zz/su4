@@ -13,10 +13,10 @@ public class Appointment {
 	private MeetingRoom room;
 	private String des;
 	private boolean type;
-	private Employee owner;
-	ArrayList<Employee> participants;
+	private User owner;
+	ArrayList<User> participants;
 
-	public Appointment(Date date, Time startTime, Time endTime, String des, boolean type, Employee owner){
+	public Appointment(Date date, Time startTime, Time endTime, String des, boolean type, User owner){
 		this.date = date;
 		this.startTime = startTime;
 		this.endTime = endTime;

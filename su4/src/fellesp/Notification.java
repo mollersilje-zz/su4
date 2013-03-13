@@ -19,8 +19,8 @@ public class Notification {
 	public String response(int i, int participants){
 		participants = 0;
 		if (i == 1){
-			return "Accept";
 			participants++;
+			return "Accept";
 			}
 		else if (i == 2){return "Decline";}
 		else {return "NoResponce";}
