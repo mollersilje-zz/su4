@@ -6,21 +6,22 @@ import java.sql.Time;
 
 public class Appointment {
   
-
+	private int id;
 	private Date date;
 	private Time startTime;
 	private Time endTime;
 	private MeetingRoom room;
-	private String des;
+	private String description;
 	private boolean type;
 	private Employee owner;
 	ArrayList<Employee> participants;
 
-	public Appointment(Date date, Time startTime, Time endTime, String des, boolean type, Employee owner){
+	public Appointment(int id, Date date, Time startTime, Time endTime, String description, boolean type, Employee owner){
+		this.id = id;
 		this.date = date;
 		this.startTime = startTime;
 		this.endTime = endTime;
-		this.des = des;
+		this.description = description;
 		this.type = type;
 		this.owner = owner;
 	}
@@ -47,11 +48,12 @@ public class Appointment {
 	return availableRooms;
 	}
 	
-	public String getDes(){
-		return des;
+	public String getDescription(){
+		return description;
 	}
 	public boolean getType(){
 		return type;
 	}
+
 
 }
