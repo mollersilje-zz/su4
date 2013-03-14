@@ -66,4 +66,12 @@ public class AppointmentFactory {
 		
 		return nextId++;
 	}
+	
+	public int deleteAppointment(String){
+		
+		
+		
+	}
+	
+	
 }

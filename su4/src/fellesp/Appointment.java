@@ -13,7 +13,7 @@ public class Appointment {
 	private MeetingRoom room;
 	private String description;
 	private User owner;
-	ArrayList<String> participants;
+	private int type;
 
 
 	/* public Appointment(int id, Date date, Time startTime, Time endTime, String description, boolean type, User owner){
@@ -21,24 +21,15 @@ public class Appointment {
 	}	
 	*/
 
-	public Appointment(Date date, Time startTime, Time endTime, String description, User owner){
+	public Appointment(Date date, Time startTime, Time endTime, String description, User owner, int type){
 			
 		this.date = date;
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.description = description;
-		this.type = type;
 		this.owner = owner;
-	}
-	
-	public Appointment(Date date, Time startTime, Time endTime, String description, User owner, ArraList<String> participants){
-		this.date = date;
-		this.startTime = startTime;
-		this.endTime = endTime;
-		this.description = description;
 		this.type = type;
-		this.owner = owner;
-		this.participants = participants;
+		
 	}
 
 	public Date getDate(){
