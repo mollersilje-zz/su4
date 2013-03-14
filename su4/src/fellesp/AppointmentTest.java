@@ -26,7 +26,7 @@ public class AppointmentTest {
 			prop.load(new FileInputStream("./Properties.properties"));
 			AppointmentFactory factory = new AppointmentFactory(prop);
 			// Tester utføres her
-			Appointment a = factory.createAppointment(date, startTime, endTime, description, meeting, owner);
+			factory.updateAppointmentPlace(2,"P15");
 			
 			
 			
