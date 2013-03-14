@@ -18,7 +18,8 @@ public class AppointmentFactory {
 	}
 	
 
-	public static Appointment createAppointment(Date date, Time startTime, Time endTime, String description, boolean meeting, String owner) throws ClassNotFoundException, SQLException{
+	public static Appointment createAppointment(Date date, Time startTime, Time endTime,
+			String description, boolean meeting, String owner) throws ClassNotFoundException, SQLException{
 
 		java.sql.Date sqlDate = new java.sql.Date(date.getTime());
 		java.sql.Time sqlStartTime = new java.sql.Time(startTime.getTime());
@@ -32,8 +33,10 @@ public class AppointmentFactory {
 		
 
 		Appointment a= new Appointment(id, date, startTime, endTime, description, owner, meeting);
-		String query=String.format("insert into Appointment " + "(appointmentID, date, startTime, endTime, description, meeting, owner) values ('" + id + "','" + sqlDate + "','" + sqlStartTime +"','" + sqlEndTime +"','" + description + "','" 
-		+ meetingInt + "','" + owner + "');" );
+		String query=String.format("insert into Appointment " 
+				+ "(appointmentID, date, startTime, endTime, description, meeting, owner) values ('" 
+				+ id + "','" + sqlDate + "','" + sqlStartTime +"','" + sqlEndTime +"','" + description + "','" 
+				+ meetingInt + "','" + owner + "');" );
 		System.out.println(query);
 		
 
@@ -95,50 +98,52 @@ public class AppointmentFactory {
 		db.close();
 	}
 	
-
 	public static void updateAppointmentFromQuery(String id, String query) throws ClassNotFoundException, SQLException{
 		db.initialize();
 		db.makeSingleQuery(query);
 		db.close();
 	}
 	
-	public static void updateAppointmentDate(String id, Date date) throws ClassNotFoundException, SQLException{
+	public static void updateAppointmentDate(String id, Date date) 
+			throws ClassNotFoundException, SQLException{
 		java.sql.Date sqlDate = new java.sql.Date(date.getTime());
 		String query = String.format("UPDATE Appointment SET date =" + sqlDate + "WHERE appointmentID = %d",id);
 		updateAppointmentFromQuery(id,query);
 	}
 	
-	public static void updateAppointmentStartTime(String id, Time startTime) throws ClassNotFoundException, SQLException{
+	public static void updateAppointmentStartTime(String id, Time startTime) 
+			throws ClassNotFoundException, SQLException{
 		java.sql.Time sqlStartTime = new java.sql.Time(startTime.getTime());
 		String query = String.format("UPDATE Appointment SET startTime =" + sqlStartTime + "WHERE appointmentID = %d", id);
 		updateAppointmentFromQuery(id,query);
 	}
 	
-	public static void updateAppointmentEndTime(String id, Time endTime) throws ClassNotFoundException, SQLException{
+	public static void updateAppointmentEndTime(String id, Time endTime) 
+			throws ClassNotFoundException, SQLException{
 		java.sql.Time sqlEndTime = new java.sql.Time(endTime.getTime());
 		String query = String.format("UPDATE Appointment SET startTime =" + sqlEndTime + "WHERE appointmentID = %d", id);
 		updateAppointmentFromQuery(id,query);
 	}
 	
-	public static void updateAppointmentPlace(String id, String place) throws ClassNotFoundException, SQLException{
+	public static void updateAppointmentPlace(String id, String place) 
+			throws ClassNotFoundException, SQLException{
 		String query = String.format("UPDATE Appointment SET date = %s WHERE appointmentID = %d",place,id);
 		updateAppointmentFromQuery(id,query);
 	}
 	
-	public static void updateAppointmentDescription(String id, String description) throws ClassNotFoundException, SQLException{
+	public static void updateAppointmentDescription(String id, String description) 
+			throws ClassNotFoundException, SQLException{
 		String query = String.format("UPDATE Appointment SET description = %s WHERE appointmentID = %d",description,id);
 		updateAppointmentFromQuery(id,query);
 	}
 	
-	public static void updateAppointmentMeeting(String id, boolean meeting) throws ClassNotFoundException, SQLException{
+	public static void updateAppointmentMeeting(String id, boolean meeting) 
+			throws ClassNotFoundException, SQLException{
 		String query = String.format("UPDATE Appointment SET meeting = %b  WHERE appointmentID = %d",meeting,id);
 		updateAppointmentFromQuery(id,query);
 	}
 	
 	// Har ikke update for owner fordi denne skal ikke kunne endres!
-	
-	
-	
 	
 }
 
