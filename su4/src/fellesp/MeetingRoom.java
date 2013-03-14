@@ -4,16 +4,17 @@ import java.sql.Date;
 import java.sql.Time;
 
 public class MeetingRoom {
-	private int RoomNumber;
+	
+	private int roomNumber;
 	private int capacity;
 	
-	public MeetingRoom(int Roomnumber, int capacity){
-		this.RoomNumber=Roomnumber;
+	public MeetingRoom(int roomnumber, int capacity){
+		this.roomNumber=roomnumber;
 		this.capacity=capacity;
 	}
 	
 	public int getRoomNumber(){
-		return this.RoomNumber;
+		return this.roomNumber;
 	}
 	
 	public int getCapacity(){
@@ -21,7 +22,7 @@ public class MeetingRoom {
 	}
 	
 	public void setRoomNumber(int roomNumber){
-		this.RoomNumber=roomNumber;
+		this.roomNumber=roomNumber;
 	}
 	
 	public void setCapacity(int capacity){

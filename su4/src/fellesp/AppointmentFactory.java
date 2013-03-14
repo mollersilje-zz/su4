@@ -83,5 +83,7 @@ public class AppointmentFactory {
 		
 	}
 	
-	
+	public void updateAppointment(String id){
+		
+	}
 }
