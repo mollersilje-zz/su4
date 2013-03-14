@@ -26,17 +26,15 @@ DBConnection db;
 		return e;
 	}
 	
-	public User getUser(int id) throws ClassNotFoundException, SQLException
+	public User getUser(String userName) throws ClassNotFoundException, SQLException
 	{
-		String query=String.format("Select username,password from User where id=%d",id);
+		String query=String.format("SELECT password FROM User WHERE username = %s",userName);
 		db.initialize();
 		ResultSet rs=db.makeSingleQuery(query);
-		String userName=null;
 		String password=null;
 		while(rs.next())
 		{
-			userName=rs.getString(1);
-			password=rs.getString(2);
+			password=rs.getString(1);
 		}
 		
 		User e=new User(userName,password);
@@ -50,14 +48,19 @@ DBConnection db;
 	
 	public void deleteUser(String userName) throws ClassNotFoundException, SQLException
 	{
-		String query = String.format("DELETE from User WHERE username=%s",userName);
+		String query = String.format("DELETE FROM User WHERE username=%s",userName);
 		db.initialize();
 		db.makeSingleUpdate(query);
 		db.close();
 	}
-	public void updateUser()
+	public void updateUser(String userName, String newPassword) throws ClassNotFoundException, SQLException
 	{
-		;
+		String update = String.format("UPDATE User" +
+				" SET password = %s",newPassword +
+				" WHERE username = %s", userName);
+		db.initialize();
+		db.makeSingleUpdate(update);
+		db.close();
 	}
 
 }
