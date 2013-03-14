@@ -6,7 +6,7 @@ import java.util.Properties;
 
 
 public class UserFactory {
-DBConnection db;
+static DBConnection db;
 	
 	
 	public UserFactory(Properties properties) throws ClassNotFoundException, SQLException
@@ -14,11 +14,11 @@ DBConnection db;
 		 db=new DBConnection(properties);
 	}
 	
-	public  User  createUser(String userName, String password) throws ClassNotFoundException, SQLException
+	public static  User  createUser(String userName, String password) throws ClassNotFoundException, SQLException
 	{
 		User e=new User(userName, password);
 		String query=String.format("insert into User " +
-				"(username,password) values ('%s', %d)", userName, password); 
+				"(username,password) values ('%s', %s)", userName, password); 
 		db.initialize();
 		db.makeSingleUpdate(query);
 		db.close();
@@ -26,7 +26,7 @@ DBConnection db;
 		return e;
 	}
 	
-	public User getUser(String userName) throws ClassNotFoundException, SQLException
+	public static User getUser(String userName) throws ClassNotFoundException, SQLException
 	{
 		String query=String.format("SELECT password FROM User WHERE username = %s",userName);
 		db.initialize();
@@ -46,14 +46,14 @@ DBConnection db;
 		
 	}
 	
-	public void deleteUser(String userName) throws ClassNotFoundException, SQLException
+	public static void deleteUser(String userName) throws ClassNotFoundException, SQLException
 	{
 		String query = String.format("DELETE FROM User WHERE username=%s",userName);
 		db.initialize();
 		db.makeSingleUpdate(query);
 		db.close();
 	}
-	public void updateUser(String userName, String newPassword) throws ClassNotFoundException, SQLException
+	public static void updateUser(String userName, String newPassword) throws ClassNotFoundException, SQLException
 	{
 		String update = String.format("UPDATE User" +
 				" SET password = %s",newPassword +
