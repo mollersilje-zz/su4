@@ -5,31 +5,25 @@ import java.sql.Time;
 public class Notification {
 	
 	private Time alarm;
-	private int i;
-
-	public Notification() {
-		//this.i;
-	}
-	public Time getAlarm() {
-		return alarm;
-	}
+	public int i;
+	public int participants;
 
 	public void setAlarm(Time alarm) {
 		this.alarm = alarm;
 	}
 	
-	public int response(int i){
-		if (i == 1){return 1;}
-		else if (i == 2){return 2;}
-		else {return 3;}
+	public Time getAlarm() {
+		return alarm;
 	}
 	
-	public boolean acceptInvite(){
-		return false;
-	}
-	
-	public boolean rejectInvite(){
-		return false;
+	public String response(int i, int participants){
+		participants = 0;
+		if (i == 1){
+			participants++;
+			return "Accept";
+			}
+		else if (i == 2){return "Decline";}
+		else {return "NoResponce";}
 	}
 	
 }

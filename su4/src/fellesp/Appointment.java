@@ -13,11 +13,16 @@ public class Appointment {
 	private MeetingRoom room;
 	private String description;
 	private boolean type;
-	private Employee owner;
-	ArrayList<Employee> participants;
+	private User owner;
+	ArrayList<User> participants;
 
-	public Appointment(int id, Date date, Time startTime, Time endTime, String description, boolean type, Employee owner){
+	
+	public Appointment(int id, Date date, Time startTime, Time endTime, String description, boolean type, User owner){
 		this.id = id;
+	}	
+		
+	public Appointment(Date date, Time startTime, Time endTime, String description, boolean type, User owner){
+
 		this.date = date;
 		this.startTime = startTime;
 		this.endTime = endTime;
