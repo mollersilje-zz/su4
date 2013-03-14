@@ -32,11 +32,7 @@ DBConnection db;
 		db.initialize();
 		ResultSet rs=db.makeSingleQuery(query);
 		String password=null;
-		while(rs.next())
-		{
 			password=rs.getString(1);
-		}
-		
 		User e=new User(userName,password);
 		rs.close();
 		db.close();
