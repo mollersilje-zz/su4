@@ -13,7 +13,7 @@ public class Appointment {
 	private MeetingRoom room;
 	private String description;
 	private String owner;
-	private int type;
+	private int type; // "1" avtale og "2" er møte
 
 
 	public Appointment(int id, Date date, Time startTime, Time endTime, String description, String owner, int type){
@@ -26,6 +26,9 @@ public class Appointment {
 		this.type = type;
 	}
 
+	public int getId(){
+		return id;
+	}
 	public Date getDate(){
 		return date;
 	}

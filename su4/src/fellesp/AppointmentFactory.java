@@ -40,7 +40,7 @@ public class AppointmentFactory {
 		Time startTime = null;
 		Time endTime = null;
 		String description = null;
-		boolean type = false ; // "false" er appoinment, "true" er meeting
+		int type = 1; // "1" avtale og "2" er møte
 		String owner = null;
 		
 		while (rs.next()){
@@ -48,13 +48,14 @@ public class AppointmentFactory {
 			startTime = rs.getTime(2);
 			endTime = rs.getTime(3);
 			description = rs.getString(4);
-			type = rs.getBoolean(5);
+			type = rs.getInt(5);
 			owner = rs.getString(6);
 		}
 		
-		Appointment a= new Appointment(id , date, startTime, endTime, description, type, owner);
+		Appointment a= new Appointment(id, date, startTime, endTime, description, owner, type);
+
+		db.close();
 		
-		db.close()
 		return a;
 	}
 	
@@ -72,11 +73,13 @@ public class AppointmentFactory {
 		return nextId++;
 	}
 	
-	public void deleteAppointment(String owner){
+	public void deleteAppointment(String owner) throws ClassNotFoundException, SQLException{
 		
 		String query =String.format("delete from Appintment where owner =" + owner);
 		db.initialize();
-		ResultSet res = db.makeSingleQuery(query);
+		ResultSet rs = db.makeSingleQuery(query);
+		rs.close();
+		db.close();
 		
 	}
 	
