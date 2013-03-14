@@ -30,7 +30,7 @@ public class AppointmentFactory {
 	}
 	
 	public Appointment getAppointment(int id){
-		
+		Appointment a = new Apointment(id, date, startTime, endTime, description, type)
 	}
 	
 	public int getNextId() throws ClassNotFoundException, SQLException{
