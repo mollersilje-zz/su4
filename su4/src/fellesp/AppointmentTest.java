@@ -13,6 +13,7 @@ public class AppointmentTest {
 	 * @param args
 	 */
 	@SuppressWarnings("deprecation")
+	
 	public static void main(String[] args) {
 		Properties prop = new Properties();
 		Date date = new Date(2013, 04, 15);
@@ -26,7 +27,7 @@ public class AppointmentTest {
 			prop.load(new FileInputStream("./Properties.properties"));
 			AppointmentFactory factory = new AppointmentFactory(prop);
 			// Tester utføres her
-			factory.updateAppointmentPlace(2,"P15");
+			AppointmentFactory.updateAppointmentPlace(2,"P15");
 			
 			
 			
