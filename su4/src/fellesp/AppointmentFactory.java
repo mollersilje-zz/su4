@@ -114,12 +114,22 @@ public class AppointmentFactory {
 		updateAppointmentFromQuery(id,query);
 	}
 	
-	public static void updateAppointmentDate(String id, Date date) throws ClassNotFoundException, SQLException{
-		java.sql.Date sqlDate = new java.sql.Date(date.getTime());
-		String query = String.format("UPDATE Appointment SET date =" + sqlDate + "WHERE appointmentID = %d",id);
+	public static void updateAppointmentPlace(String id, String place) throws ClassNotFoundException, SQLException{
+		String query = String.format("UPDATE Appointment SET date = %s WHERE appointmentID = %d",place,id);
 		updateAppointmentFromQuery(id,query);
 	}
 	
+	public static void updateAppointmentDescription(String id, String description) throws ClassNotFoundException, SQLException{
+		String query = String.format("UPDATE Appointment SET description = %s WHERE appointmentID = %d",description,id);
+		updateAppointmentFromQuery(id,query);
+	}
+	
+	public static void updateAppointmentMeeting(String id, boolean meeting) throws ClassNotFoundException, SQLException{
+		String query = String.format("UPDATE Appointment SET meeting = %b  WHERE appointmentID = %d",meeting,id);
+		updateAppointmentFromQuery(id,query);
+	}
+	
+	// Har ikke update for owner fordi denne skal ikke kunne endres!
 	
 	
 	

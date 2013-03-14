@@ -14,7 +14,7 @@ public class Appointment {
 	private String place;
 	private String description;
 	private String owner;
-	private boolean meeting; // "1" avtale og "2" er møte
+	private boolean meeting; // "false" avtale og "true" er møte
 
 
 	public Appointment(int id, Date date, Time startTime, Time endTime, String description, String owner, boolean meeting){
@@ -40,8 +40,8 @@ public class Appointment {
 		return endTime;
 	}
 	
-	public MeetingRoom getMeetingRoom(){
-		return room;
+	public String getMeetingRoom(){
+		return place;
 	}
 	
 	public String getDescription(){
