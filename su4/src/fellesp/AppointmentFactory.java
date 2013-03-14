@@ -15,13 +15,15 @@ public class AppointmentFactory {
 		 db = new DBConnection(properties);
 	}
 	
-	public Appointment createAppointment(Date date, Time startTime, Time endTime, String description, boolean type, String owner) throws ClassNotFoundException, SQLException{
+	public Appointment createAppointment(Date date, Time startTime, Time endTime, String description, int type, String owner) throws ClassNotFoundException, SQLException{
 		java.sql.Date sqlDate = new java.sql.Date(date.getTime());
 		java.sql.Time sqlStartTime = new java.sql.Time(startTime.getTime());
 		java.sql.Time sqlEndTime = new java.sql.Time(endTime.getTime());
 		
-		Appointment a= new Appointment(getNextId(), date, startTime, endTime, description, type, owner);
-		String query=String.format("insert into appointment " + "(date, startTime, endTime, description, type, owner) values (" + sqlDate + "," + sqlStartTime +"," + sqlEndTime +"," + description + "," 
+		int id = getNextId();
+		
+		Appointment a= new Appointment(id, date, startTime, endTime, description, owner, type);
+		String query=String.format("insert into appointment " + "(date, startTime, endTime, description, type, owner) values (" + id + "," + sqlDate + "," + sqlStartTime +"," + sqlEndTime +"," + description + "," 
 		+ type + "," + owner + ");" );
 		
 		db.initialize();
