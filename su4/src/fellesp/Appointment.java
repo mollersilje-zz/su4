@@ -12,26 +12,23 @@ public class Appointment {
 	private Time endTime;
 	private MeetingRoom room;
 	private String description;
-	private User owner;
-	private int type;
+	private String owner;
+	private int type; // "1" avtale og "2" er møte
 
 
-	/* public Appointment(int id, Date date, Time startTime, Time endTime, String description, boolean type, User owner){
+	public Appointment(int id, Date date, Time startTime, Time endTime, String description, String owner, int type){
 		this.id = id;
-	}	
-	*/
-
-	public Appointment(Date date, Time startTime, Time endTime, String description, User owner, int type){
-			
 		this.date = date;
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.description = description;
 		this.owner = owner;
 		this.type = type;
-		
 	}
 
+	public int getId(){
+		return id;
+	}
 	public Date getDate(){
 		return date;
 	}
@@ -41,7 +38,23 @@ public class Appointment {
 	public Time getEndTime(){
 		return endTime;
 	}
+	
+	public MeetingRoom getMeetingRoom(){
+		return room;
+	}
+	
+	public String getDescription(){
+		return description;
+	}
 
+	public String getOwner(){
+		return owner;
+	}
+	
+	public int getType(){
+		return type;
+	}
+	
 	public ArrayList<MeetingRoom> ReserveRoom(Date date, Time startTime, Time endTime, boolean type, int participants){
 		ArrayList<MeetingRoom> rooms = new ArrayList<MeetingRoom>();//Henter rom fra database hvor capacity >= participants
 		ArrayList<MeetingRoom> availableRooms = new ArrayList<MeetingRoom>();
@@ -52,13 +65,6 @@ public class Appointment {
 			}
 		}
 	return availableRooms;
-	}
-
-	public String getDescription(){
-		return description;
-	}
-	public boolean getType(){
-		return type;
 	}
 
 
