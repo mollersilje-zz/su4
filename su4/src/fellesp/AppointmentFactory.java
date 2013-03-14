@@ -86,7 +86,7 @@ public class AppointmentFactory {
 		
 	}
 	
-	public static void updateAppointment(String id){
+	public static void updateAppointment(Date date, Time startTime, Time endTime, String place, String description, int type, String owner){
 		String query = String.format("UPDATE User");
 		
 		
