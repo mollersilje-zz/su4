@@ -52,8 +52,7 @@ static DBConnection db;
 	public static void updateUser(String userName, String newPassword) throws ClassNotFoundException, SQLException
 	{
 		String update = String.format("UPDATE User" +
-				" SET password = '%s'",newPassword +
-				" WHERE username = '%s'", userName);
+				" SET password = '%s' WHERE username = '%s'", newPassword, userName);
 		db.initialize();
 		db.makeSingleUpdate(update);
 		db.close();
