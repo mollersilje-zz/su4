@@ -12,23 +12,23 @@ public class Appointment {
 	private Time endTime;
 	private MeetingRoom room;
 	private String description;
-	private boolean type;
-	private User owner;
+	private boolean type; // "0" er avtale, "1" er møte
+	private String owner;
 	ArrayList<User> participants;
 
 	
-	public Appointment(int id, Date date, Time startTime, Time endTime, String description, boolean type, User owner){
+	public Appointment(int id, Date date, Time startTime, Time endTime, String description, boolean type, String owner){
 		this.id = id;
 	}	
 		
-	public Appointment(Date date, Time startTime, Time endTime, String description, boolean type, User owner){
+	public Appointment(Date date, Time startTime, Time endTime, String description, boolean type, String owner){
 
 		this.date = date;
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.description = description;
 		this.type = type;
-		this.owner = owner;
+		this.setOwner(owner);
 	}
 	
 	public Date getDate(){
@@ -60,5 +60,8 @@ public class Appointment {
 		return type;
 	}
 
+	public String getOwner() {
+		return owner;
+	}
 
 }
