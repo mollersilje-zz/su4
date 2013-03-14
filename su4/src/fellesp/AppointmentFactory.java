@@ -25,11 +25,16 @@ public class AppointmentFactory {
 		java.sql.Time sqlEndTime = new java.sql.Time(endTime.getTime());
 		
 		int id = getNextId();
+		int meetingInt = 0;
+		if (meeting) {
+			meetingInt = 1;
+		}
 		
 
 		Appointment a= new Appointment(id, date, startTime, endTime, description, owner, meeting);
-		String query=String.format("insert into appointment " + "(date, startTime, endTime, description, type, owner) values (" + id + "," + sqlDate + "," + sqlStartTime +"," + sqlEndTime +"," + description + "," 
-		+ meeting + "," + owner + ");" );
+		String query=String.format("insert into Appointment " + "(appointmentID, date, startTime, endTime, description, meeting, owner) values ('" + id + "','" + sqlDate + "','" + sqlStartTime +"','" + sqlEndTime +"','" + description + "','" 
+		+ meetingInt + "','" + owner + "');" );
+		System.out.println(query);
 		
 
 		db.initialize();
@@ -73,12 +78,13 @@ public class AppointmentFactory {
 		ResultSet rs = db.makeSingleQuery(query);
 		int nextId = 0;
 		while( rs.next() ){
-			nextId = rs.getInt(0);
+			nextId = rs.getInt(1);
 		}
 		rs.close();
 		db.close();
+		nextId = nextId + 1;
 		
-		return nextId++;
+		return nextId;
 	}
 	
 	public static void deleteAppointment(String owner) throws ClassNotFoundException, SQLException{

@@ -19,13 +19,14 @@ public class AppointmentTest {
 		Time startTime = new Time(15, 30, 0);
 		Time endTime = new Time(16, 15, 0);
 		String description = "Test Appointment";
-		int type = 1;
-		String owner = "Sivert";
+		boolean meeting = false; 
+		String owner = "Foo";
 		
 		try {
 			prop.load(new FileInputStream("./Properties.properties"));
 			AppointmentFactory factory = new AppointmentFactory(prop);
 			// Tester utføres her
+			Appointment a = factory.createAppointment(date, startTime, endTime, description, meeting, owner);
 			
 			
 			

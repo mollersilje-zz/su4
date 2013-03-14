@@ -19,6 +19,7 @@ public class UserTest {
 			prop.load(new FileInputStream("./Properties.properties"));
 			UserFactory factory = new UserFactory(prop);
 			// Put test calls here
+			factory.createUser("Foo", "Cake");
 			
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block

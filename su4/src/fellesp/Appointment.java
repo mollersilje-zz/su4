@@ -11,7 +11,7 @@ public class Appointment {
 	private Date date;
 	private Time startTime;
 	private Time endTime;
-	private MeetingRoom room;
+	private String room;
 	private String description;
 	private String owner;
 	private boolean meeting; // "1" avtale og "2" er møte
