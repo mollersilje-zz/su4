@@ -10,17 +10,18 @@ public class Appointment {
 	private Date date;
 	private Time startTime;
 	private Time endTime;
-	private MeetingRoom room;
+	private String place;
 	private String description;
 	private String owner;
 	private int type; // "1" avtale og "2" er møte
 
 
-	public Appointment(int id, Date date, Time startTime, Time endTime, String description, String owner, int type){
+	public Appointment(int id, Date date, Time startTime, Time endTime, String place, String description, String owner, int type){
 		this.id = id;
 		this.date = date;
 		this.startTime = startTime;
 		this.endTime = endTime;
+		this.place = place;
 		this.description = description;
 		this.owner = owner;
 		this.type = type;
@@ -39,8 +40,8 @@ public class Appointment {
 		return endTime;
 	}
 	
-	public MeetingRoom getMeetingRoom(){
-		return room;
+	public String getPlace(){
+		return place;
 	}
 	
 	public String getDescription(){
