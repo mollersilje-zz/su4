@@ -8,14 +8,14 @@ import java.util.Properties;
 
 public class AppointmentFactory {
 	
-	DBConnection db;
+	static DBConnection db;
 	
 	public AppointmentFactory(Properties properties) throws ClassNotFoundException, SQLException
 	{
 		 db = new DBConnection(properties);
 	}
 	
-	public Appointment createAppointment(Date date, Time startTime, Time endTime, String description, int type, String owner) throws ClassNotFoundException, SQLException{
+	public static Appointment createAppointment(Date date, Time startTime, Time endTime, String description, int type, String owner) throws ClassNotFoundException, SQLException{
 		java.sql.Date sqlDate = new java.sql.Date(date.getTime());
 		java.sql.Time sqlStartTime = new java.sql.Time(startTime.getTime());
 		java.sql.Time sqlEndTime = new java.sql.Time(endTime.getTime());
@@ -32,7 +32,7 @@ public class AppointmentFactory {
 		return a;
 	}
 	
-	public Appointment getAppointment(int id) throws SQLException, ClassNotFoundException{
+	public static  Appointment getAppointment(int id) throws SQLException, ClassNotFoundException{
 		String query = String.format("select * from Appointmet where id =" + id);
 		db.initialize();
 		ResultSet rs = db.makeSingleQuery(query);
@@ -59,7 +59,7 @@ public class AppointmentFactory {
 		return a;
 	}
 	
-	public int getNextId() throws ClassNotFoundException, SQLException{
+	private static int getNextId() throws ClassNotFoundException, SQLException{
 		String query= "select max(appointmentID) from Appointment";
 		db.initialize();
 		ResultSet rs = db.makeSingleQuery(query);
@@ -73,7 +73,7 @@ public class AppointmentFactory {
 		return nextId++;
 	}
 	
-	public void deleteAppointment(String owner) throws ClassNotFoundException, SQLException{
+	public static void deleteAppointment(String owner) throws ClassNotFoundException, SQLException{
 		
 		String query =String.format("delete from Appintment where owner =" + owner);
 		db.initialize();
