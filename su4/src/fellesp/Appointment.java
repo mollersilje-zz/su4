@@ -11,6 +11,7 @@ public class Appointment {
 	private Date date;
 	private Time startTime;
 	private Time endTime;
+	private String room;
 	private String place;
 	private String description;
 	private String owner;
