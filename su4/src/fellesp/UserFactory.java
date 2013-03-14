@@ -17,8 +17,8 @@ static DBConnection db;
 	public static  User  createUser(String userName, String password) throws ClassNotFoundException, SQLException
 	{
 		User e=new User(userName, password);
-		String query=String.format("insert into User " +
-				"(username,password) values ('%s', %s)", userName, password); 
+		String query=String.format("INSERT INTO User " +
+				"values ('%s', '%s')", userName, password); 
 		db.initialize();
 		db.makeSingleUpdate(query);
 		db.close();
@@ -28,7 +28,7 @@ static DBConnection db;
 	
 	public static User getUser(String userName) throws ClassNotFoundException, SQLException
 	{
-		String query=String.format("SELECT password FROM User WHERE username = %s",userName);
+		String query=String.format("SELECT password FROM User WHERE username = '%s'",userName);
 		db.initialize();
 		ResultSet rs=db.makeSingleQuery(query);
 		String password=null;
@@ -48,7 +48,7 @@ static DBConnection db;
 	
 	public static void deleteUser(String userName) throws ClassNotFoundException, SQLException
 	{
-		String query = String.format("DELETE FROM User WHERE username=%s",userName);
+		String query = String.format("DELETE FROM User WHERE username= '%s'",userName);
 		db.initialize();
 		db.makeSingleUpdate(query);
 		db.close();
@@ -56,8 +56,8 @@ static DBConnection db;
 	public static void updateUser(String userName, String newPassword) throws ClassNotFoundException, SQLException
 	{
 		String update = String.format("UPDATE User" +
-				" SET password = %s",newPassword +
-				" WHERE username = %s", userName);
+				" SET password = '%s'",newPassword +
+				" WHERE username = '%s'", userName);
 		db.initialize();
 		db.makeSingleUpdate(update);
 		db.close();

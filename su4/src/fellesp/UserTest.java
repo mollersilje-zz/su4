@@ -14,21 +14,20 @@ public class UserTest {
 		String password = "Banankake";
 		Properties prop = new Properties();
 		
+
 		try {
-			prop.load(new FileInputStream("Properties.properties"));
-		} catch (IOException ex){
-			ex.printStackTrace();
-		}
-		
-		try {
+			prop.load(new FileInputStream("./Properties.properties"));
 			UserFactory factory = new UserFactory(prop);
-			User sivert = factory.createUser(userName, password);
+			// Put test calls here
+			
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (IOException ex){
+			ex.printStackTrace();
 		}
 	}
 	
