@@ -15,16 +15,16 @@ public class AppointmentFactory {
 		 db = new DBConnection(properties);
 	}
 	
-	public static Appointment createAppointment(Date date, Time startTime, Time endTime, String description, int type, String owner) throws ClassNotFoundException, SQLException{
+	public static Appointment createAppointment(Date date, Time startTime, Time endTime, String description, boolean meeting, String owner) throws ClassNotFoundException, SQLException{
 		java.sql.Date sqlDate = new java.sql.Date(date.getTime());
 		java.sql.Time sqlStartTime = new java.sql.Time(startTime.getTime());
 		java.sql.Time sqlEndTime = new java.sql.Time(endTime.getTime());
 		
 		int id = getNextId();
 		
-		Appointment a= new Appointment(id, date, startTime, endTime, description, owner, type);
+		Appointment a= new Appointment(id, date, startTime, endTime, description, owner, meeting);
 		String query=String.format("insert into appointment " + "(date, startTime, endTime, description, type, owner) values (" + id + "," + sqlDate + "," + sqlStartTime +"," + sqlEndTime +"," + description + "," 
-		+ type + "," + owner + ");" );
+		+ meeting + "," + owner + ");" );
 		
 		db.initialize();
 		db.makeSingleUpdate(query);
@@ -40,7 +40,7 @@ public class AppointmentFactory {
 		Time startTime = null;
 		Time endTime = null;
 		String description = null;
-		int type = 1; // "1" avtale og "2" er møte
+		boolean meeting = true; // "1" avtale og "2" er møte
 		String owner = null;
 		
 		while (rs.next()){
@@ -48,12 +48,11 @@ public class AppointmentFactory {
 			startTime = rs.getTime(2);
 			endTime = rs.getTime(3);
 			description = rs.getString(4);
-			type = rs.getInt(5);
+			meeting = rs.getBoolean(5);
 			owner = rs.getString(6);
 		}
 		
-		Appointment a= new Appointment(id, date, startTime, endTime, description, owner, type);
-
+		Appointment a= new Appointment(id, date, startTime, endTime, description, owner, meeting);
 		db.close();
 		
 		return a;
