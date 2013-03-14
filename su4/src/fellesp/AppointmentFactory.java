@@ -120,12 +120,7 @@ public class AppointmentFactory {
 		updateAppointmentFromQuery(id,query);
 	}
 	
-	public static void updateAppointmentDate(String id, Date date) throws ClassNotFoundException, SQLException{
-		java.sql.Date sqlDate = new java.sql.Date(date.getTime());
-		String query = String.format("UPDATE Appointment SET date =" + sqlDate + "WHERE appointmentID = %d",id);
-		updateAppointmentFromQuery(id,query);
-	}
-	
+
 	
 	
 	

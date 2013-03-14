@@ -11,7 +11,6 @@ public class Appointment {
 	private Date date;
 	private Time startTime;
 	private Time endTime;
-	private String room;
 	private String place;
 	private String description;
 	private String owner;
@@ -41,8 +40,8 @@ public class Appointment {
 		return endTime;
 	}
 	
-	public MeetingRoom getMeetingRoom(){
-		return room;
+	public String getMeetingRoom(){
+		return place;
 	}
 	
 	public String getDescription(){
