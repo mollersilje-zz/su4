@@ -17,6 +17,7 @@ public class Appointment {
 
 
 	public Appointment(int id, Date date, Time startTime, Time endTime, String description, String owner, int type){
+		this.id = id;
 		this.date = date;
 		this.startTime = startTime;
 		this.endTime = endTime;
@@ -33,6 +34,10 @@ public class Appointment {
 	}
 	public Time getEndTime(){
 		return endTime;
+	}
+	
+	public MeetingRoom getMeetingRoom(){
+		return room;
 	}
 	
 	public String getDescription(){

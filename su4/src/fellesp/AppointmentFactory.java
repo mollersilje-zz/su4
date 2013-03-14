@@ -28,6 +28,7 @@ public class AppointmentFactory {
 		
 		db.initialize();
 		db.makeSingleUpdate(query);
+		db.close();
 		return a;
 	}
 	
@@ -52,6 +53,8 @@ public class AppointmentFactory {
 		}
 		
 		Appointment a= new Appointment(id , date, startTime, endTime, description, type, owner);
+		
+		db.close()
 		return a;
 	}
 	
@@ -69,9 +72,11 @@ public class AppointmentFactory {
 		return nextId++;
 	}
 	
-	public int deleteAppointment(String){
+	public void deleteAppointment(String owner){
 		
-		
+		String query =String.format("delete from Appintment where owner =" + owner);
+		db.initialize();
+		ResultSet res = db.makeSingleQuery(query);
 		
 	}
 	
