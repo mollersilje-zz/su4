@@ -4,6 +4,7 @@ public class CalandarHandler{
    
    private boolean LoggedIn=false;
    private User user;
+   private Appointment appointment;
    
  //  public CalendarHandler(User user){
    //   this.employee=user;
@@ -21,6 +22,12 @@ public class CalandarHandler{
       LoggedIn=false;
    }
    
+   public void createAppointment(Date date, Time startTime, Time endTime, String des, boolean type, User owner) {
+	   appointment = new Appointment(date, startTime, endTime, des, type, owner);
+   }
    
+   public void deleteAppointment(Date date, Time startTime, Time endTime, String des, boolean type, User owner) {
+	   
+   }
    
 }
