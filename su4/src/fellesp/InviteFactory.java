@@ -2,6 +2,7 @@ package fellesp;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Properties;
 
 public class InviteFactory {
@@ -62,6 +63,20 @@ public class InviteFactory {
 		db.initialize();
 		db.makeSingleUpdate(update);
 		db.close();
+	}
+	
+	public ArrayList<String> getParticipants(int aID) throws ClassNotFoundException, SQLException{
+		ArrayList<String> list = new ArrayList<String>();
+		String query = String.format("SELECT username FROM Invite WHERE appoinmentID = %d",aID);
+		db.initialize();
+		ResultSet rs = db.makeSingleQuery(query);
+		while (rs.next()){
+			list.add(rs.getString("username"));
+		}
+		
+		db.close();
+		
+		return list;
 	}
 
 }
