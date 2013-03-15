@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
+import java.util.ArrayList;
 import java.util.Properties;
 
 public class AppointmentFactory {
@@ -97,7 +98,7 @@ public class AppointmentFactory {
 		db.makeSingleUpdate(query);
 		db.close();
 	}
-	
+
 	public static void updateAppointmentFromQuery(int id, String query) throws ClassNotFoundException, SQLException{
 		db.initialize();
 		db.makeSingleUpdate(query);
@@ -148,6 +149,29 @@ public class AppointmentFactory {
 	}
 	
 	// Har ikke update for owner fordi denne skal ikke kunne endres!
+	
+	public static ArrayList<String> availableRooms(Date date, Time starttime, Time endtime) throws ClassNotFoundException, SQLException {
+		java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+		java.sql.Time sqlStartTime = new java.sql.Time(starttime.getTime());
+		java.sql.Time sqlEndTime = new java.sql.Time(endtime.getTime());
+		String query = String.format("Select roomnumber From MeetingRoom Where roomnumber NOT IN (Select place From Appointment Where date = '" + sqlDate + "' and ((starttime >= '" + sqlStartTime + "' and starttime <= '" + sqlEndTime + "') or (endtime >= '" + sqlStartTime + "' and endtime <= '" + sqlEndTime + "') or (starttime < '" + sqlStartTime + "' and endtime > '" + sqlEndTime + "')))");
+
+		ArrayList<String> availableRooms = new ArrayList<String>();
+		db.initialize();
+		ResultSet rs = db.makeSingleQuery(query);
+		
+		while(rs.next()) {
+			availableRooms.add(rs.getString("roomnumber"));
+		}
+		
+		
+		rs.close();
+		db.close();
+		
+		
+		return availableRooms;
+		
+	}
 	
 }
 
