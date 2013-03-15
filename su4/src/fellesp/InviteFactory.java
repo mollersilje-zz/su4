@@ -7,7 +7,7 @@ import java.util.Properties;
 
 public class InviteFactory {
   
-	DBConnection db;
+	private static DBConnection db;
 	
 	
 	public InviteFactory(Properties properties) throws ClassNotFoundException, SQLException
@@ -65,7 +65,7 @@ public class InviteFactory {
 		db.close();
 	}
 	
-	public ArrayList<String> getParticipants(int aID) throws ClassNotFoundException, SQLException{
+	public static ArrayList<String> getParticipants(int aID) throws ClassNotFoundException, SQLException{
 		ArrayList<String> list = new ArrayList<String>();
 		String query = String.format("SELECT username FROM Invite WHERE appoinmentID = %d",aID);
 		db.initialize();

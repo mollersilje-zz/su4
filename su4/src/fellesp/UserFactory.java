@@ -2,6 +2,7 @@ package fellesp;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Properties;
 
 
@@ -59,13 +60,13 @@ static DBConnection db;
 		db.close();
 	}
 	
-	public static ArrayList<int> getUnansweredInvites (String username) throws ClassNotFoundException, SQLException{
-		ArrayList<int> list = new ArrayList<int>;
-		String query = String.format("select appointmentID from Invite where username='%s' and where response =1;", username)
+	public static ArrayList<Integer> getUnansweredInvites(String username) throws ClassNotFoundException, SQLException{
+		ArrayList<Integer> list = new ArrayList<Integer>();
+		String query = String.format("select appointmentID from Invite where username='%s' and where response =1;", username);
 		db.initialize();
 		ResultSet rs=db.makeSingleQuery(query);
 		int response;
-		while rs.next(){
+		while (rs.next()){
 			response= rs.getInt(1);
 			list.add(response);
 		}
