@@ -78,9 +78,12 @@ public class CalandarHandler{
 		   }
 		   
 		   infac.updateInviteResponse(username, intrespons, intid);
-		   
-		   
+		
 	   }
+	   
+	   // Håndtere invitasjoner som har fått avslag.
+	   
+	   
 	   
 	   
    }
