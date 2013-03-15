@@ -41,8 +41,34 @@ public class InviteFactory {
 		db.close();
 		
 		return res;
+	}
 	
+	public static ArrayList<String> getDeclinedUsers(int aID) throws ClassNotFoundException, SQLException{
+		String query = String.format("SELECT username FROM Invite WHERE appointmentID = '%s' AND response = 3;", aID);
+		db.initialize();
+		ResultSet rs=db.makeSingleQuery(query);
+		ArrayList<String> list = new ArrayList<String>();
+		while (rs.next()){
+			list.add(rs.getString(1));
+		}
+		rs.close();
+		db.close();
 		
+		return list;
+	}
+	
+	public static ArrayList<Integer> getInviteApointmentID(String username) throws ClassNotFoundException, SQLException{
+		String query = String.format("SELECT appointmentID FROM Invite WHERE username = '%s' AND response = 2;",username);
+		db.initialize();
+		ResultSet rs=db.makeSingleQuery(query);
+		ArrayList<Integer> list = new ArrayList<Integer>();
+		while (rs.next()){
+			list.add(rs.getInt(1));
+		}
+		rs.close();
+		db.close();
+		
+		return list;
 	}
 	
 	public void deleteInvite(String username) throws ClassNotFoundException, SQLException
