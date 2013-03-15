@@ -1,5 +1,6 @@
 package fellesp;
 
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ public class InviteFactory {
 	{
 		Invite e=new Invite(username, aID);
 		String query=String.format("insert into Invite " +
-				"(username,appointmentID) values ('%s', '%d')", username, aID); 
+				"(response,username,appointmentID) values (1,'%s', '%d')", username, aID); 
 		db.initialize();
 		db.makeSingleUpdate(query);
 		db.close();
@@ -34,8 +35,14 @@ public class InviteFactory {
 		String query=String.format("SELECT response FROM Invite WHERE username = '%s' AND appointmentID = '%d'",username, aID);
 		db.initialize();
 		ResultSet rs=db.makeSingleQuery(query);
+		int res;
 
-		int res = rs.getInt(1);
+		if (rs.next()) {
+		    res = rs.getInt(1);
+		}
+		else {
+			return (Integer) null;
+		}
 		
 		rs.close();
 		db.close();
@@ -53,6 +60,7 @@ public class InviteFactory {
 		}
 		rs.close();
 		db.close();
+
 		
 		return list;
 	}
@@ -82,10 +90,7 @@ public class InviteFactory {
 	
 	public void updateInviteResponse(String username, int newResponse, int aID) throws ClassNotFoundException, SQLException
 	{
-		String update = String.format("UPDATE Invite" +
-				" SET response = '%d'",newResponse +
-				" WHERE username = '%s'", username + 
-				" AND appointmentID = '%d'", aID);
+		String update = String.format("UPDATE Invite" + " SET response = %d" + " WHERE username = '%s'" + " AND appointmentID = %d", newResponse, username, aID);
 		db.initialize();
 		db.makeSingleUpdate(update);
 		db.close();
@@ -93,16 +98,18 @@ public class InviteFactory {
 	
 	public static ArrayList<String> getParticipants(int aID) throws ClassNotFoundException, SQLException{
 		ArrayList<String> list = new ArrayList<String>();
-		String query = String.format("SELECT username FROM Invite WHERE appoinmentID = %d",aID);
+		String query = String.format("SELECT username FROM Invite WHERE appointmentID = %d",aID);
 		db.initialize();
 		ResultSet rs = db.makeSingleQuery(query);
 		while (rs.next()){
 			list.add(rs.getString("username"));
 		}
-		
+
 		db.close();
 		
+
 		return list;
 	}
 
 }
+
