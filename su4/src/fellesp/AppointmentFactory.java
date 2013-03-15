@@ -114,14 +114,14 @@ public class AppointmentFactory {
 	public static void updateAppointmentStartTime(int id, Time startTime) 
 			throws ClassNotFoundException, SQLException{
 		java.sql.Time sqlStartTime = new java.sql.Time(startTime.getTime());
-		String query = String.format("UPDATE Appointment SET startTime =" + sqlStartTime + "WHERE appointmentID = '%d'", id);
+		String query = String.format("UPDATE Appointment SET startTime ='" + sqlStartTime + "'WHERE appointmentID = '%d'", id);
 		updateAppointmentFromQuery(id,query);
 	}
 	
 	public static void updateAppointmentEndTime(int id, Time endTime) 
 			throws ClassNotFoundException, SQLException{
 		java.sql.Time sqlEndTime = new java.sql.Time(endTime.getTime());
-		String query = String.format("UPDATE Appointment SET startTime =" + sqlEndTime + "WHERE appointmentID = '%d'", id);
+		String query = String.format("UPDATE Appointment SET startTime ='" + sqlEndTime + "'WHERE appointmentID = '%d'", id);
 		updateAppointmentFromQuery(id,query);
 	}
 	
