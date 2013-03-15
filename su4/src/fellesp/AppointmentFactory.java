@@ -18,7 +18,7 @@ public class AppointmentFactory {
 	}
 	
 
-	public static Appointment createAppointment(Date date, Time startTime, Time endTime,
+	public static Appointment createAppointment(Date date, Time startTime, Time endTime, String place,
 			String description, boolean meeting, String owner) throws ClassNotFoundException, SQLException{
 
 		java.sql.Date sqlDate = new java.sql.Date(date.getTime());
@@ -32,13 +32,12 @@ public class AppointmentFactory {
 		}
 		
 
-		Appointment a= new Appointment(id, date, startTime, endTime, description, owner, meeting);
-		String query=String.format("insert into Appointment " 
-				+ "(appointmentID, date, startTime, endTime, description, meeting, owner) values ('" 
-				+ id + "','" + sqlDate + "','" + sqlStartTime +"','" + sqlEndTime +"','" + description + "','" 
+		Appointment a= new Appointment(id, date, startTime, endTime, place, description, meeting, owner);
+		String query=String.format("INSERT INTO Appointment " 
+				+ "(appointmentID, date, startTime, endTime, place, description, meeting, owner) VALUES ('" 
+				+ id + "','" + sqlDate + "','" + sqlStartTime +"','" + sqlEndTime +"','" + place + "," + description + "','" 
 				+ meetingInt + "','" + owner + "');" );
 		System.out.println(query);
-		
 
 		db.initialize();
 		db.makeSingleUpdate(query);
@@ -48,27 +47,30 @@ public class AppointmentFactory {
 	
 
 	public static Appointment getAppointment(int id) throws SQLException, ClassNotFoundException{
-		String query = String.format("select * from Appointmet where id =" + id + ";" );
+		String query = String.format("SELECT * FROM Appointmet WHERE id =" + id + ";" );
 
 		db.initialize();
 		ResultSet rs = db.makeSingleQuery(query);
+		
 		Date date = null;
 		Time startTime = null;
 		Time endTime = null;
+		String place = null;
 		String description = null;
 		boolean meeting = true; // "1" avtale og "2" er møte
 		String owner = null;
 		
 		while (rs.next()){
-			date = rs.getDate(1);
-			startTime = rs.getTime(2);
-			endTime = rs.getTime(3);
-			description = rs.getString(4);
-			meeting = rs.getBoolean(5);
-			owner = rs.getString(6);
+			date = rs.getDate(2);
+			startTime = rs.getTime(3);
+			endTime = rs.getTime(4);
+			place = rs.getString(5);
+			description = rs.getString(6);
+			meeting = rs.getBoolean(8);
+			owner = rs.getString(9);
 		}
 		
-		Appointment a= new Appointment(id, date, startTime, endTime, description, owner, meeting);
+		Appointment a= new Appointment(id, date, startTime, endTime, place, description, meeting, owner);
 		db.close();
 		
 		return a;
@@ -91,7 +93,7 @@ public class AppointmentFactory {
 	}
 	
 	public static void deleteAppointment(String owner) throws ClassNotFoundException, SQLException{
-		String query =String.format("delete from Appintment where owner =" + owner + ";");
+		String query =String.format("DELETE FROM Appintment WHERE owner =" + owner + ";");
 		db.initialize();
 		ResultSet rs = db.makeSingleQuery(query);
 		rs.close();

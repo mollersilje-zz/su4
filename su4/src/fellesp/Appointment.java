@@ -17,11 +17,12 @@ public class Appointment {
 	private boolean meeting; // "false" avtale og "true" er møte
 
 
-	public Appointment(int id, Date date, Time startTime, Time endTime, String description, String owner, boolean meeting){
+	public Appointment(int id, Date date, Time startTime, Time endTime, String place, String description, boolean meeting, String owner){
 		this.id = id;
 		this.date = date;
 		this.startTime = startTime;
 		this.endTime = endTime;
+		this.place = place;
 		this.description = description;
 		this.owner = owner;
 		this.meeting = meeting;
@@ -40,7 +41,7 @@ public class Appointment {
 		return endTime;
 	}
 	
-	public String getMeetingRoom(){
+	public String getPlace(){
 		return place;
 	}
 	
@@ -48,13 +49,15 @@ public class Appointment {
 		return description;
 	}
 
+	public boolean isMeeting(){
+		return meeting;
+	}
+	
 	public String getOwner(){
 		return owner;
 	}
 	
-	public boolean isMeeting(){
-		return meeting;
-	}
+	
 	
 	public ArrayList<MeetingRoom> ReserveRoom(Date date, Time startTime, Time endTime, boolean meeting, int participants){
 		ArrayList<MeetingRoom> rooms = new ArrayList<MeetingRoom>();//Henter rom fra database hvor capacity >= participants
