@@ -56,7 +56,7 @@ public class AppointmentFactory {
 		Time endTime = null;
 		String place = null;
 		String description = null;
-		boolean meeting = true; // "1" avtale og "2" er møte
+		boolean meeting = true;
 		String owner = null;
 		
 		while (rs.next()){
@@ -121,7 +121,7 @@ public class AppointmentFactory {
 	public static void updateAppointmentEndTime(int id, Time endTime) 
 			throws ClassNotFoundException, SQLException{
 		java.sql.Time sqlEndTime = new java.sql.Time(endTime.getTime());
-		String query = String.format("UPDATE Appointment SET startTime ='" + sqlEndTime + "'WHERE appointmentID = '%d'", id);
+		String query = String.format("UPDATE Appointment SET endTime ='" + sqlEndTime + "'WHERE appointmentID = '%d'", id);
 		updateAppointmentFromQuery(id,query);
 	}
 	
@@ -139,7 +139,11 @@ public class AppointmentFactory {
 	
 	public static void updateAppointmentMeeting(int id, boolean meeting) 
 			throws ClassNotFoundException, SQLException{
-		String query = String.format("UPDATE Appointment SET meeting = '%b'  WHERE appointmentID = '%d'",meeting,id);
+		int meetingInt = 0;
+		if (meeting) {
+			meetingInt = 1;
+		}
+		String query = String.format("UPDATE Appointment SET meeting = '%d'  WHERE appointmentID = '%d'",meetingInt,id);
 		updateAppointmentFromQuery(id,query);
 	}
 	
