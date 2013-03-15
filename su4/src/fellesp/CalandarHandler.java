@@ -1,10 +1,31 @@
 package fellesp;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Properties;
+
 public class CalandarHandler{
    
    private boolean LoggedIn=false;
    private User user;
    private Appointment appointment;
+   private static InviteFactory infac;
+   private static UserFactory usfac;
+   
+   public static void main(String [ ] args) throws FileNotFoundException, IOException, ClassNotFoundException, SQLException{
+	   Properties prop = new Properties();
+	   prop.load(new FileInputStream("./Properties.properties"));
+	   infac = new InviteFactory(prop);
+	   usfac = new UserFactory(prop);
+	   
+	   
+	   
+	   
+	   
+   }
    
  //  public CalendarHandler(User user){
    //   this.employee=user;
@@ -17,6 +38,18 @@ public class CalandarHandler{
        LoggedIn = true;
      }
    }
+   
+   public static ArrayList<Integer> checkInvites(String username) throws ClassNotFoundException, SQLException{
+	   ArrayList<Integer> list= new ArrayList<Integer>();
+	   list = UserFactory.getUnansweredInvites(username);
+	   if (list.size() == 0){
+		   return null;
+	   }
+	   else{
+	   return list;
+	   }
+	}
+	
    
    public void LogOut(){
       LoggedIn=false;
