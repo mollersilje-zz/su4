@@ -31,7 +31,9 @@ public class AppointmentFactory {
 		if (meeting) {
 			meetingInt = 1;
 		}
-		
+		if (endTime.before(startTime)){
+			return null;
+		}
 
 		Appointment a= new Appointment(id, date, startTime, endTime, place, description, meeting, owner);
 		String query=String.format("INSERT INTO Appointment " 
@@ -124,6 +126,12 @@ public class AppointmentFactory {
 		java.sql.Time sqlEndTime = new java.sql.Time(endTime.getTime());
 		String query = String.format("UPDATE Appointment SET endTime ='" + sqlEndTime + "'WHERE appointmentID = '%d'", id);
 		updateAppointmentFromQuery(id,query);
+	}
+	
+	public static void updateAppointmentTime(int id, Time startTime, Time endTime) 
+			throws ClassNotFoundException, SQLException{
+		updateAppointmentStartTime(id, startTime);
+		updateAppointmentEndTime(id, endTime);
 	}
 	
 	public static void updateAppointmentPlace(int id, String place) 
