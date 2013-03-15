@@ -51,7 +51,7 @@ public class InviteFactory {
 	}
 	
 	public static ArrayList<String> getDeclinedUsers(int aID) throws ClassNotFoundException, SQLException{
-		String query = String.format("SELECT username FROM Invite WHERE appointmentID = '%s' AND response = 3;", aID);
+		String query = String.format("SELECT username FROM Invite WHERE appointmentID = '%s' AND response = '3';", aID);
 		db.initialize();
 		ResultSet rs=db.makeSingleQuery(query);
 		ArrayList<String> list = new ArrayList<String>();
@@ -66,7 +66,7 @@ public class InviteFactory {
 	}
 	
 	public static ArrayList<Integer> getInviteApointmentID(String username) throws ClassNotFoundException, SQLException{
-		String query = String.format("SELECT appointmentID FROM Invite WHERE username = '%s' AND response = 2;",username);
+		String query = String.format("SELECT appointmentID FROM Invite WHERE username = '%s' AND response = '2';",username);
 		db.initialize();
 		ResultSet rs=db.makeSingleQuery(query);
 		ArrayList<Integer> list = new ArrayList<Integer>();
@@ -90,7 +90,7 @@ public class InviteFactory {
 	
 	public void updateInviteResponse(String username, int newResponse, int aID) throws ClassNotFoundException, SQLException
 	{
-		String update = String.format("UPDATE Invite" + " SET response = %d" + " WHERE username = '%s'" + " AND appointmentID = %d", newResponse, username, aID);
+		String update = String.format("UPDATE Invite" + " SET response = '%d'" + " WHERE username = '%s'" + " AND appointmentID =' %d'", newResponse, username, aID);
 		db.initialize();
 		db.makeSingleUpdate(update);
 		db.close();
@@ -98,7 +98,7 @@ public class InviteFactory {
 	
 	public static ArrayList<String> getParticipants(int aID) throws ClassNotFoundException, SQLException{
 		ArrayList<String> list = new ArrayList<String>();
-		String query = String.format("SELECT username FROM Invite WHERE appointmentID = %d",aID);
+		String query = String.format("SELECT username FROM Invite WHERE appointmentID = '%d'",aID);
 		db.initialize();
 		ResultSet rs = db.makeSingleQuery(query);
 		while (rs.next()){

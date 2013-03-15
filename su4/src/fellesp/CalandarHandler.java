@@ -37,15 +37,20 @@ public class CalandarHandler{
 		}
 
 		while (LoggedIn){ 
-			System.out.println("Hva vil du gjøre nå? \n 1) Sjekke nye invitasjoner \n 2) Se avtaler/møter \n 3) Opprette avtale/møte \n 4) Endre avtale/møte \n 5) Slette avtale/møte" +
+			System.out.println("Hva vil du gjøre nå? \n 1) Sjekke nye invitasjoner \n 2) Sjekke avslag \n 3) Opprette avtale/møte \n 4) Endre avtale/møte \n 5) Slette avtale/møte" +
 					" \n 6) Sette alam på avtale \n 7) Logge ut \n");
 			String start = sc.nextLine();
-			int intstart = Integer.parseInt(start);
-			switch(intstart){
-			case 1: handleInvites();
-			case 2: 
+			
+			switch(start){
+				case "1": handleInvites(); break;
+				case "2": checkDeclines(username); break;
+				
+				
+				default: System.out.println("Skriv inn riktig tall."); break;
+				}
 
 			}
+
 		}
 
 
@@ -58,7 +63,7 @@ public class CalandarHandler{
 
 
 
-	}
+	
 
 	//  public CalendarHandler(User user){
 	//   this.employee=user;
@@ -66,9 +71,7 @@ public class CalandarHandler{
 
 	public static void LogInCheck(String username, String password1) throws ClassNotFoundException, SQLException{
 		String password2 = null;
-		//SPÃ˜RRING:password2 =select password from User as e where username=e.username
-		User user = UserFactory.getUser(username);
-		password2 = user.getPassword();
+		password2 = UserFactory.getPassword(username);
 
 		if (password1.equals(password2)) {
 			LoggedIn = true;
@@ -128,6 +131,10 @@ public class CalandarHandler{
 				infac.updateInviteResponse(username, intrespons, intid);
 
 			}
+			else if (answerInvites.equals("NEI")){
+				System.out.println("Du har valgt å ikke svare på invitasjn nå.");
+			}
+			else{System.out.println("Du skrev feil input og har blitt sendt tilbake til hovedmeny. \n");}
 		}
 	}
 

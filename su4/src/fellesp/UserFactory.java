@@ -40,8 +40,18 @@ static DBConnection db;
 		db.close();
 		
 		return e;
+	}
 	
-		
+	public static String getPassword(String username) throws ClassNotFoundException, SQLException{
+		String query=String.format("SELECT password FROM User WHERE username = '%s';",username);
+		db.initialize();
+		ResultSet rs=db.makeSingleQuery(query);
+		rs.beforeFirst();
+		rs.next();
+		String password= rs.getString(1);
+		rs.close();
+		db.close();
+		return password;
 	}
 	
 	public static void deleteUser(String userName) throws ClassNotFoundException, SQLException
@@ -62,7 +72,7 @@ static DBConnection db;
 	
 	public static ArrayList<Integer> getUnansweredInvites(String username) throws ClassNotFoundException, SQLException{
 		ArrayList<Integer> list = new ArrayList<Integer>();
-		String query = String.format("select appointmentID from Invite where username='%s' and where response =1;", username);
+		String query = String.format("select appointmentID from Invite where username='%s' and response=1;", username);
 		db.initialize();
 		ResultSet rs=db.makeSingleQuery(query);
 		int response;
