@@ -58,5 +58,18 @@ static DBConnection db;
 		db.makeSingleUpdate(update);
 		db.close();
 	}
+	
+	public static ArrayList<int> getUnansweredInvites (String username) throws ClassNotFoundException, SQLException{
+		ArrayList<int> list = new ArrayList<int>;
+		String query = String.format("select appointmentID from Invite where username='%s' and where response =1;", username)
+		db.initialize();
+		ResultSet rs=db.makeSingleQuery(query);
+		int response;
+		while rs.next(){
+			response= rs.getInt(1);
+			list.add(response);
+		}
+		return list;
+	}
 
 }
