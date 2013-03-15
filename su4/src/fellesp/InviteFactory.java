@@ -35,12 +35,12 @@ public class InviteFactory {
 		db.initialize();
 		ResultSet rs=db.makeSingleQuery(query);
 
+		int res = rs.getInt(1);
 		
-		Invite e=new Invite(username,aID);
 		rs.close();
 		db.close();
 		
-		return e.getResponse();
+		return res;
 	
 		
 	}
