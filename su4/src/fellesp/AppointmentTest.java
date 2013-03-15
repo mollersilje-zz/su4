@@ -25,10 +25,9 @@ public class AppointmentTest {
 		
 		try {
 			prop.load(new FileInputStream("./Properties.properties"));
-			AppointmentFactory factory = new AppointmentFactory(prop);
+			AppointmentFactory fac = new AppointmentFactory(prop);
 			// Tester utføres her
-			AppointmentFactory.updateAppointmentPlace(2,"P15");
-			
+			AppointmentFactory.updateAppointmentEndTime(0, new Time(15,00,0));
 			
 			
 		} catch (FileNotFoundException e) {

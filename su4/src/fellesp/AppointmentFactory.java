@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
+import java.util.ArrayList;
 import java.util.Properties;
 
 public class AppointmentFactory {
@@ -35,9 +36,8 @@ public class AppointmentFactory {
 		Appointment a= new Appointment(id, date, startTime, endTime, place, description, meeting, owner);
 		String query=String.format("INSERT INTO Appointment " 
 				+ "(appointmentID, date, startTime, endTime, place, description, meeting, owner) VALUES ('" 
-				+ id + "','" + sqlDate + "','" + sqlStartTime +"','" + sqlEndTime +"','" + place + "," + description + "','" 
+				+ id + "','" + sqlDate + "','" + sqlStartTime +"','" + sqlEndTime +"','" + place + "','" + description + "','" 
 				+ meetingInt + "','" + owner + "');" );
-		System.out.println(query);
 
 		db.initialize();
 		db.makeSingleUpdate(query);
@@ -57,7 +57,7 @@ public class AppointmentFactory {
 		Time endTime = null;
 		String place = null;
 		String description = null;
-		boolean meeting = true; // "1" avtale og "2" er møte
+		boolean meeting = true;
 		String owner = null;
 		
 		while (rs.next()){
@@ -93,59 +93,85 @@ public class AppointmentFactory {
 	}
 	
 	public static void deleteAppointment(String owner) throws ClassNotFoundException, SQLException{
-		String query =String.format("DELETE FROM Appintment WHERE owner =" + owner + ";");
+		String query =String.format("DELETE FROM Appintment WHERE owner ='" + owner + "';");
 		db.initialize();
-		ResultSet rs = db.makeSingleQuery(query);
-		rs.close();
+		db.makeSingleUpdate(query);
 		db.close();
 	}
-	
+
 	public static void updateAppointmentFromQuery(int id, String query) throws ClassNotFoundException, SQLException{
 		db.initialize();
-		db.makeSingleQuery(query);
+		db.makeSingleUpdate(query);
 		db.close();
 	}
 	
 	public static void updateAppointmentDate(int id, Date date) 
 			throws ClassNotFoundException, SQLException{
 		java.sql.Date sqlDate = new java.sql.Date(date.getTime());
-		String query = String.format("UPDATE Appointment SET date =" + sqlDate + "WHERE appointmentID = %d",id);
+		String query = String.format("UPDATE Appointment SET date ='" + sqlDate + "'WHERE appointmentID = '%d'",id);
 		updateAppointmentFromQuery(id,query);
 	}
 	
 	public static void updateAppointmentStartTime(int id, Time startTime) 
 			throws ClassNotFoundException, SQLException{
 		java.sql.Time sqlStartTime = new java.sql.Time(startTime.getTime());
-		String query = String.format("UPDATE Appointment SET startTime =" + sqlStartTime + "WHERE appointmentID = %d", id);
+		String query = String.format("UPDATE Appointment SET startTime ='" + sqlStartTime + "'WHERE appointmentID = '%d'", id);
 		updateAppointmentFromQuery(id,query);
 	}
 	
 	public static void updateAppointmentEndTime(int id, Time endTime) 
 			throws ClassNotFoundException, SQLException{
 		java.sql.Time sqlEndTime = new java.sql.Time(endTime.getTime());
-		String query = String.format("UPDATE Appointment SET startTime =" + sqlEndTime + "WHERE appointmentID = %d", id);
+		String query = String.format("UPDATE Appointment SET endTime ='" + sqlEndTime + "'WHERE appointmentID = '%d'", id);
 		updateAppointmentFromQuery(id,query);
 	}
 	
 	public static void updateAppointmentPlace(int id, String place) 
 			throws ClassNotFoundException, SQLException{
-		String query = String.format("UPDATE Appointment SET date = %s WHERE appointmentID = %d",place,id);
+		String query = String.format("UPDATE Appointment SET place = '%s' WHERE appointmentID = '%d'",place,id);
 		updateAppointmentFromQuery(id,query);
 	}
 	
 	public static void updateAppointmentDescription(int id, String description) 
 			throws ClassNotFoundException, SQLException{
-		String query = String.format("UPDATE Appointment SET description = %s WHERE appointmentID = %d",description,id);
+		String query = String.format("UPDATE Appointment SET description = '%s' WHERE appointmentID = '%d'",description,id);
 		updateAppointmentFromQuery(id,query);
 	}
 	
 	public static void updateAppointmentMeeting(int id, boolean meeting) 
 			throws ClassNotFoundException, SQLException{
-		String query = String.format("UPDATE Appointment SET meeting = %b  WHERE appointmentID = %d",meeting,id);
+		int meetingInt = 0;
+		if (meeting) {
+			meetingInt = 1;
+		}
+		String query = String.format("UPDATE Appointment SET meeting = '%d'  WHERE appointmentID = '%d'",meetingInt,id);
 		updateAppointmentFromQuery(id,query);
 	}
 	
 	// Har ikke update for owner fordi denne skal ikke kunne endres!
+	
+	public static ArrayList<String> availableRooms(Date date, Time starttime, Time endtime) throws ClassNotFoundException, SQLException {
+		java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+		java.sql.Time sqlStartTime = new java.sql.Time(starttime.getTime());
+		java.sql.Time sqlEndTime = new java.sql.Time(endtime.getTime());
+		String query = String.format("Select roomnumber From MeetingRoom Where roomnumber NOT IN (Select place From Appointment Where date = '" + sqlDate + "' and ((starttime >= '" + sqlStartTime + "' and starttime <= '" + sqlEndTime + "') or (endtime >= '" + sqlStartTime + "' and endtime <= '" + sqlEndTime + "') or (starttime < '" + sqlStartTime + "' and endtime > '" + sqlEndTime + "')))");
+
+		ArrayList<String> availableRooms = new ArrayList<String>();
+		db.initialize();
+		ResultSet rs = db.makeSingleQuery(query);
+		
+		while(rs.next()) {
+			availableRooms.add(rs.getString("roomnumber"));
+		}
+		
+		
+		rs.close();
+		db.close();
+		
+		
+		return availableRooms;
+		
+	}
 	
 }
 
