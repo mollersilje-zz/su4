@@ -7,6 +7,9 @@ import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Properties;
 
+import fellesp.Appointment;
+import fellesp.DBConnection;
+
 public class AppointmentFactory {
 	
 
@@ -22,23 +25,25 @@ public class AppointmentFactory {
 	public static Appointment createAppointment(Date date, Time startTime, Time endTime, String place,
 			String description, boolean meeting, String owner) throws ClassNotFoundException, SQLException{
 
-		java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+		/*java.sql.Date sqlDate = new java.sql.Date(date.getTime());
 		java.sql.Time sqlStartTime = new java.sql.Time(startTime.getTime());
 		java.sql.Time sqlEndTime = new java.sql.Time(endTime.getTime());
+		*/
 		
 		int id = getNextId();
+		
 		int meetingInt = 0;
 		if (meeting) {
 			meetingInt = 1;
 		}
-		if (endTime.before(startTime)){
+		/*if (endTime.before(startTime)){
 			return null;
-		}
+		}*/
 
 		Appointment a= new Appointment(id, date, startTime, endTime, place, description, meeting, owner);
 		String query=String.format("INSERT INTO Appointment " 
 				+ "(appointmentID, date, startTime, endTime, place, description, meeting, owner) VALUES ('" 
-				+ id + "','" + sqlDate + "','" + sqlStartTime +"','" + sqlEndTime +"','" + place + "','" + description + "','" 
+				+ id + "','" + date + "','" + startTime +"','" + endTime +"','" + place + "','" + description + "','" 
 				+ meetingInt + "','" + owner + "');" );
 
 		db.initialize();
@@ -49,7 +54,7 @@ public class AppointmentFactory {
 	
 
 	public static Appointment getAppointment(int id) throws SQLException, ClassNotFoundException{
-		String query = String.format("SELECT * FROM Appointmet WHERE id =" + id + ";" );
+		String query = String.format("SELECT * FROM Appointment WHERE appointmentID =" + id + ";" );
 
 		db.initialize();
 		ResultSet rs = db.makeSingleQuery(query);
@@ -94,8 +99,8 @@ public class AppointmentFactory {
 		return nextId;
 	}
 	
-	public static void deleteAppointment(String owner) throws ClassNotFoundException, SQLException{
-		String query =String.format("DELETE FROM Appintment WHERE owner ='" + owner + "';");
+	public static void deleteAppointment(int aID) throws ClassNotFoundException, SQLException{
+		String query =String.format("DELETE FROM Appointment WHERE appointmentID ='" + aID + "';");
 		db.initialize();
 		db.makeSingleUpdate(query);
 		db.close();

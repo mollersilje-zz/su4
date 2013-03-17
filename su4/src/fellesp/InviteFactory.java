@@ -88,7 +88,7 @@ public class InviteFactory {
 	}
 	
 	
-	public void updateInviteResponse(String username, int newResponse, int aID) throws ClassNotFoundException, SQLException
+	public static void updateInviteResponse(String username, int newResponse, int aID) throws ClassNotFoundException, SQLException
 	{
 		String update = String.format("UPDATE Invite" + " SET response = '%d'" + " WHERE username = '%s'" + " AND appointmentID =' %d'", newResponse, username, aID);
 		db.initialize();

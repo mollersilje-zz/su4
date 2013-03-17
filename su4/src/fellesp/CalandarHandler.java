@@ -4,9 +4,20 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.sql.Time;
 import java.util.ArrayList;
+import java.sql.Date;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Properties;
 import java.util.Scanner;
+
+import fellesp.Appointment;
+import fellesp.AppointmentFactory;
+import fellesp.InviteFactory;
+import fellesp.User;
+import fellesp.UserFactory;
 
 
 public class CalandarHandler{
@@ -16,6 +27,7 @@ public class CalandarHandler{
 	//  private static Appointment appointment;
 	private static InviteFactory infac;
 	private static UserFactory usfac;
+	private static AppointmentFactory apfac;
 	private static String username;
 	private static String password;
 	private static Scanner sc;
@@ -27,6 +39,7 @@ public class CalandarHandler{
 		prop.load(new FileInputStream("./Properties.properties"));
 		infac = new InviteFactory(prop);
 		usfac = new UserFactory(prop);
+		apfac = new AppointmentFactory(prop);
 
 
 
@@ -40,34 +53,29 @@ public class CalandarHandler{
 			System.out.println("Hva vil du gjøre nå? \n 1) Sjekke nye invitasjoner \n 2) Sjekke avslag \n 3) Opprette avtale/møte \n 4) Endre avtale/møte \n 5) Slette avtale/møte" +
 					" \n 6) Sette alam på avtale \n 7) Logge ut \n");
 			String start = sc.nextLine();
-			
-			switch(start){
-				case "1": handleInvites(); break;
-				case "2": checkDeclines(username); break;
-				
-				
-				default: System.out.println("Skriv inn riktig tall."); break;
-				}
 
+			switch(start){
+			case "1": handleInvites(); break; // Skriver ikke ut dato og tid riktig. Kan gjøres "finere".
+			case "2": checkDeclines(username); break;
+			
+			case "3": try {
+				addAppointment();//Fikse dato og tid-objekter. Ellers alt ok.
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} break;
+			case "4": 
+			
+			
+			case "7": LogOut(); break; // IKKE ferdig enda.
+
+			default: System.out.println("Skriv inn riktig tall."); break;
 			}
 
 		}
 
+	}
 
-
-
-
-
-		// Håndtere invitasjoner som har fått avslag.
-
-
-
-
-	
-
-	//  public CalendarHandler(User user){
-	//   this.employee=user;
-	//}
 
 	public static void LogInCheck(String username, String password1) throws ClassNotFoundException, SQLException{
 		String password2 = null;
@@ -102,9 +110,10 @@ public class CalandarHandler{
 		else{
 			System.out.println("Du har disse ubesvarte invitasjonene:");
 			for (int i: notRespondedList){
-				System.out.println(i+ "\n");
+				System.out.println(i + " "+ printAppointment(i));
+				System.out.println("Inviterte deltagere for avtaleID " + i + " " + InviteFactory.getParticipants(i) + "\n");
 			}  
-
+			
 
 			System.out.println("Ønsker du å svare på invitasjoner nå? (JA/NEI)");
 			String answerInvites = sc.nextLine();
@@ -128,11 +137,11 @@ public class CalandarHandler{
 					// Hvis Godta må det opprettes Appointment i kalender
 				}
 
-				infac.updateInviteResponse(username, intrespons, intid);
+				InviteFactory.updateInviteResponse(username, intrespons, intid);
 
 			}
 			else if (answerInvites.equals("NEI")){
-				System.out.println("Du har valgt å ikke svare på invitasjn nå.");
+				System.out.println("Du har valgt å ikke svare på invitasjoner nå.");
 			}
 			else{System.out.println("Du skrev feil input og har blitt sendt tilbake til hovedmeny. \n");}
 		}
@@ -149,6 +158,27 @@ public class CalandarHandler{
 		}
 
 	}
+	
+	public static String printAppointment(int aID) throws ClassNotFoundException, SQLException{
+		Appointment a = AppointmentFactory.getAppointment(aID);
+
+		Date date = a.getDate();
+		DateFormat df = new SimpleDateFormat("YYYY-MM-DD");
+		String datestring = df.format(date);
+
+		Time startTime = a.getStartTime();
+		SimpleDateFormat df2 = new SimpleDateFormat("hh:mm:ss");
+		String startTimeString = df2.format(startTime);
+		
+		Time endTime = a.getStartTime();
+		SimpleDateFormat df3 = new SimpleDateFormat("hh:mm:ss");
+		String endTimeString = df3.format(endTime);
+		
+		String res = datestring + " " + startTimeString + " " + endTimeString +  " " +  a.getPlace() +  " " +  a.getDescription() +   " " + "Eier: " +  " " + a.getOwner();
+				
+		return res;
+		
+	}
 
 	public static void checkDeclines(String username) throws ClassNotFoundException, SQLException{
 		ArrayList<Integer> declineList = new ArrayList<Integer>();
@@ -162,19 +192,57 @@ public class CalandarHandler{
 	}
 
 
-	public void LogOut(){
-		LoggedIn=false;
+	public static void addAppointment() throws ParseException, ClassNotFoundException, SQLException{
+
+		Time startTime = null;
+		Time endTime = null;
+		String place = null;
+		String description = null;
+		boolean meetingbol = false;
+
+		System.out.println("Vil du lage en avtale eller et møte (Avtale/Møte)? :");
+		String meeting = sc.nextLine();
+
+		if (meeting.equals("Møte")){
+			meetingbol = true;
+		}
+		// DATO
+		System.out.println("Skriv inn dato på formen YYYY-MM-DD: ");
+		String dateString = sc.nextLine(); 
+		SimpleDateFormat formatter = new SimpleDateFormat("YYYY-MM-DD");
+		java.util.Date dateutil = formatter.parse(dateString);
+		java.sql.Date date = new Date(dateutil.getTime());
+
+		// TID
+		System.out.println("Skriv inn starttid på formen hh:mm:ss : ");
+		String startTimeString = sc.nextLine();
+		SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss");
+		long ms = sdf.parse(startTimeString).getTime();
+		startTime = new Time(ms);
+
+		System.out.println("Skriv inn sluttid på formen hh:mm:ss : ");
+		String endTimeString = sc.nextLine();
+		SimpleDateFormat sdf2 = new SimpleDateFormat("hh:mm:ss");
+		long ms2 = sdf2.parse(endTimeString).getTime();
+		endTime = new Time(ms2);
+
+		// STED
+
+		System.out.println("Skriv inn sted: ");
+		place = sc.nextLine();
+
+		// Beskrivelse
+		System.out.println("Skriv inn beskrivelse: ");
+		description = sc.nextLine();
+
+		AppointmentFactory.createAppointment(date, startTime, endTime, place, description, meetingbol, username);
 	}
 
-	/*public void createAppointment(Date date, Time startTime, Time endTime, String place, String des, boolean type, User owner) {
 
-   }
-
-   public void deleteAppointment(Date date, Time startTime, Time endTime, String des, boolean type, User owner) {
-
-   }
-	 */
-
+	public static void LogOut(){
+		LoggedIn=false;
+		System.out.println("Du er nå logget ut.");
+	}
 
 
 }
