@@ -8,16 +8,16 @@ import java.sql.Time;
 public class Appointment {
   
 	private int id;
-	private Date date;
-	private Time startTime;
-	private Time endTime;
+	private String date;
+	private String startTime;
+	private String endTime;
 	private String place;
 	private String description;
 	private String owner;
 	private boolean meeting; // "false" avtale og "true" er møte
 
 
-	public Appointment(int id, Date date, Time startTime, Time endTime, String place, String description, boolean meeting, String owner){
+	public Appointment(int id, String date, String startTime, String endTime, String place, String description, boolean meeting, String owner){
 		this.id = id;
 		this.date = date;
 		this.startTime = startTime;
@@ -32,13 +32,13 @@ public class Appointment {
 	public int getId(){
 		return id;
 	}
-	public Date getDate(){
+	public String getDate(){
 		return date;
 	}
-	public Time getStartTime(){
+	public String getStartTime(){
 		return startTime;
 	}
-	public Time getEndTime(){
+	public String getEndTime(){
 		return endTime;
 	}
 	

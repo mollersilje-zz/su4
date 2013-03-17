@@ -58,16 +58,17 @@ public class CalandarHandler{
 			switch(start){
 			case "1": handleInvites(); break; // Skriver ikke ut dato og tid riktig. Kan gjøres "finere".
 			case "2": checkDeclines(username); break;
-			
+
 			case "3": try {
-				addAppointment();//Fikse dato og tid-objekter. Ellers alt ok.
+				addAppointment(); break;//Fikse dato og tid-objekter. Ellers alt ok.
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} break;
-			case "4": 
-			
-			
+			case "4": changeAppointment(); break;
+			case "5": 
+
+
 			case "7": LogOut(); break; // IKKE ferdig enda.
 
 			default: System.out.println("Skriv inn riktig tall."); break;
@@ -111,10 +112,10 @@ public class CalandarHandler{
 		else{
 			System.out.println("Du har disse ubesvarte invitasjonene:");
 			for (int i: notRespondedList){
-				System.out.println(i + " "+ printAppointment(i));
+				System.out.println("AvtaleID: " +i + "\n" + printAppointment(i));
 				System.out.println("Inviterte deltagere for avtaleID " + i + " " + InviteFactory.getParticipants(i) + "\n");
 			}  
-			
+
 
 			System.out.println("Ønsker du å svare på invitasjoner nå? (JA/NEI)");
 			String answerInvites = sc.nextLine();
@@ -159,26 +160,20 @@ public class CalandarHandler{
 		}
 
 	}
-	
+
 	public static String printAppointment(int aID) throws ClassNotFoundException, SQLException{
 		Appointment a = AppointmentFactory.getAppointment(aID);
 
-		Date date = a.getDate();
-		DateFormat df = new SimpleDateFormat("YYYY-MM-DD");
-		String datestring = df.format(date);
+		String date = a.getDate();
+		String startTime = a.getStartTime();
+		String endTime = a.getStartTime();
 
-		Time startTime = a.getStartTime();
-		SimpleDateFormat df2 = new SimpleDateFormat("hh:mm:ss");
-		String startTimeString = df2.format(startTime);
-		
-		Time endTime = a.getStartTime();
-		SimpleDateFormat df3 = new SimpleDateFormat("hh:mm:ss");
-		String endTimeString = df3.format(endTime);
-		
-		String res = datestring + " " + startTimeString + " " + endTimeString +  " " +  a.getPlace() +  " " +  a.getDescription() +   " " + "Eier: " +  " " + a.getOwner();
-				
+
+		String res = "Dato: " + date + "\n" + "Starttid: " + startTime + "\n" + "Sluttid: " + endTime +  "\n" +
+				"Sted: " + a.getPlace() +  "\n" + "Beskrivelse: " + a.getDescription() + "\n" + "Eier: " +  " " + a.getOwner();
+
 		return res;
-		
+
 	}
 
 	public static void checkDeclines(String username) throws ClassNotFoundException, SQLException{
@@ -194,51 +189,77 @@ public class CalandarHandler{
 
 
 	public static void addAppointment() throws ParseException, ClassNotFoundException, SQLException{
-
-		Time startTime = null;
-		Time endTime = null;
 		String place = null;
 		String description = null;
 		boolean meetingbol = false;
+		ArrayList<String> list = new ArrayList<String>();
 
 		System.out.println("Vil du lage en avtale eller et møte (Avtale/Møte)? :");
 		String meeting = sc.nextLine();
 
 		if (meeting.equals("Møte")){
 			meetingbol = true;
+			System.out.println("Skriv inn deltager (en om gangen). Avslutt med 'Ferdig'");
+			String svar = null;
+			while (!svar.equals("Ferdig")){
+				svar = sc.nextLine();
+				list.add(svar);
+			}
+			// DATO
+			System.out.println("Skriv inn dato på formen YYYY-MM-DD: ");
+			String dateString = sc.nextLine(); 
+			// TID
+			System.out.println("Skriv inn starttid på formen hh:mm:ss : ");
+			String startTime = sc.nextLine();
+			System.out.println("Skriv inn sluttid på formen hh:mm:ss : ");
+			String endTime = sc.nextLine();
+
+			// STED
+			System.out.println("Skriv inn sted: ");
+			place = sc.nextLine();
+
+			// Beskrivelse
+			System.out.println("Skriv inn beskrivelse: ");
+			description = sc.nextLine();
+
+			Appointment a = AppointmentFactory.createAppointment(dateString, startTime, endTime, place, description, meetingbol, username);
+			for (String user:list){
+				InviteFactory.createInvite(user, a.getId());
+			}
+
 		}
-		// DATO
-		System.out.println("Skriv inn dato på formen YYYY-MM-DD: ");
-		String dateString = sc.nextLine(); 
-		SimpleDateFormat formatter = new SimpleDateFormat("YYYY-MM-DD");
-		java.util.Date dateutil = formatter.parse(dateString);
-		java.sql.Date date = new Date(dateutil.getTime());
-
-		// TID
-		System.out.println("Skriv inn starttid på formen hh:mm:ss : ");
-		String startTimeString = sc.nextLine();
-		SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss");
-		long ms = sdf.parse(startTimeString).getTime();
-		startTime = new Time(ms);
-
-		System.out.println("Skriv inn sluttid på formen hh:mm:ss : ");
-		String endTimeString = sc.nextLine();
-		SimpleDateFormat sdf2 = new SimpleDateFormat("hh:mm:ss");
-		long ms2 = sdf2.parse(endTimeString).getTime();
-		endTime = new Time(ms2);
-
-		// STED
-
-		System.out.println("Skriv inn sted: ");
-		place = sc.nextLine();
-
-		// Beskrivelse
-		System.out.println("Skriv inn beskrivelse: ");
-		description = sc.nextLine();
-
-		AppointmentFactory.createAppointment(date, startTime, endTime, place, description, meetingbol, username);
+		else {
+			
+		}
 	}
 
+
+	public static void changeAppointment() throws ClassNotFoundException, SQLException{
+		System.out.println("Skriv inn avtaleID som du ønsker å endre på: )");
+		String id = sc.nextLine();
+		int idint = Integer.parseInt(id);
+		if (AppointmentFactory.isMeeting(idint)){
+
+		}
+		else {
+			System.out.println("Hva vil du endre på? \n 1) Endre dato \n 2) Endre starttid \n 3) Endre slutttid \n 4) Endre sted \n 5) Endre beskrivelse" + "\n");
+			String svar = sc.nextLine();
+			switch (svar){
+			case "1": changeDate(idint);break;
+			}
+
+
+		}
+
+
+
+	}
+
+	public static void changeDate(int id) throws ClassNotFoundException, SQLException{
+		System.out.println("Skriv inn ny dato på format YYYY-MM-DD : ");
+		String datestring = sc.nextLine();
+		AppointmentFactory.updateAppointmentDate(id, datestring);
+	}
 
 	public static void LogOut(){
 		LoggedIn=false;

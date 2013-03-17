@@ -16,7 +16,7 @@ public class InviteFactory {
 		 db=new DBConnection(properties);
 	}
 	
-	public  Invite  createInvite(String username, int aID) throws ClassNotFoundException, SQLException
+	public static Invite  createInvite(String username, int aID) throws ClassNotFoundException, SQLException
 	{
 		Invite e=new Invite(username, aID);
 		String query=String.format("insert into Invite " +
