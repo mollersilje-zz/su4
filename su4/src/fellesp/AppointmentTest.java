@@ -16,18 +16,11 @@ public class AppointmentTest {
 	
 	public static void main(String[] args) {
 		Properties prop = new Properties();
-		Date date = new Date(2013, 04, 15);
-		Time startTime = new Time(15, 30, 0);
-		Time endTime = new Time(16, 15, 0);
-		String description = "Test Appointment";
-		boolean meeting = false; 
-		String owner = "Foo";
-		
 		try {
 			prop.load(new FileInputStream("./Properties.properties"));
 			AppointmentFactory fac = new AppointmentFactory(prop);
 			// Tester utføres her
-			AppointmentFactory.updateAppointmentEndTime(0, new Time(15,00,0));
+			
 			
 			
 		} catch (FileNotFoundException e) {

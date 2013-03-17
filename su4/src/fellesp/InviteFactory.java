@@ -28,6 +28,18 @@ public class InviteFactory {
 		return e;
 	}
 	
+	public static Invite  createAppointmentInvite(String username, int aID) throws ClassNotFoundException, SQLException
+	{
+		Invite e=new Invite(username, aID);
+		String query=String.format("insert into Invite " +
+				"(response,username,appointmentID) values (1,'%s', '%d')", username, aID); 
+		db.initialize();
+		db.makeSingleUpdate(query);
+		db.close();
+		
+		return e;
+	}
+	
 	
 	
 	public int getInviteResponse(String username, int aID) throws ClassNotFoundException, SQLException
