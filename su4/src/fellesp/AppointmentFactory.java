@@ -90,7 +90,7 @@ public class AppointmentFactory {
 		ResultSet rs = db.makeSingleQuery(query);
 		int nextId = 0;
 		while( rs.next() ){
-			nextId = rs.getInt(1);
+			nextId = Math.max(nextId, rs.getInt(1));
 		}
 		rs.close();
 		db.close();

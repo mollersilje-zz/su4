@@ -28,6 +28,7 @@ public class CalandarHandler{
 	private static InviteFactory infac;
 	private static UserFactory usfac;
 	private static AppointmentFactory apfac;
+	private static CalendarFactory cafac;
 	private static String username;
 	private static String password;
 	private static Scanner sc;
@@ -40,7 +41,7 @@ public class CalandarHandler{
 		infac = new InviteFactory(prop);
 		usfac = new UserFactory(prop);
 		apfac = new AppointmentFactory(prop);
-
+		cafac = new CalendarFactory(prop);
 
 
 
@@ -242,6 +243,10 @@ public class CalandarHandler{
 	public static void LogOut(){
 		LoggedIn=false;
 		System.out.println("Du er nå logget ut.");
+	}
+	
+	public static void viewCalendar(String userName){
+		
 	}
 
 

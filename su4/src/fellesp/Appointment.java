@@ -26,6 +26,7 @@ public class Appointment {
 		this.description = description;
 		this.owner = owner;
 		this.meeting = meeting;
+		
 	}
 
 	public int getId(){
