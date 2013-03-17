@@ -71,5 +71,10 @@ public class Appointment {
 		}
 	return availableRooms;
 	}
+	
+	public String toString() {
+		String s = "Dato: " + getDate() + "\n Start: " + getStartTime() + "\n Slutt: " + getEndTime() + "\n på: " + getPlace() + "\n Beskrivelse: " +getDescription();
+		return s;
+	}
 
 }
