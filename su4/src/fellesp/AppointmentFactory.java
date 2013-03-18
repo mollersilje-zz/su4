@@ -197,5 +197,13 @@ public class AppointmentFactory {
 		
 	}
 	
+	public static void addAlarm(int id, String alarmtime){
+		String query = String.format("UPDATE Appointment SET alarm = '" + alarmtime + "' WHERE appointmentID = '" + id +"'");
+		db.initialize();
+		ResultSet rs = db.makeSingleQuery(query);
+		rs.close();
+		db.close();
+	}
+	
 }
 
