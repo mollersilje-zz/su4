@@ -260,6 +260,7 @@ public class CalandarHandler{
 			place = sc.nextLine();
 
 			Appointment a = AppointmentFactory.createAppointment(dateString, startTime, endTime, place, description, meetingbol, username);
+			InviteFactory.createAppointmentInvite(username, a.getId());
 			for (String user:list){
 				InviteFactory.createInvite(user, a.getId());
 			}
@@ -287,7 +288,8 @@ public class CalandarHandler{
 			System.out.println("Skriv inn sted: ");
 			place = sc.nextLine();
 			
-			Appointment b = AppointmentFactory.createAppointment(dateString, startTime, endTime, place, description, meetingbol, username);
+			Appointment a = AppointmentFactory.createAppointment(dateString, startTime, endTime, place, description, meetingbol, username);
+			InviteFactory.createAppointmentInvite(username, a.getId());
 		}
 	}
 
