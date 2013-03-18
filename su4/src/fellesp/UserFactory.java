@@ -29,12 +29,13 @@ static DBConnection db;
 	
 	public static User getUser(String userName) throws ClassNotFoundException, SQLException
 	{
-		String query=String.format("SELECT password FROM User WHERE username = '%s';",userName);
+		String query=String.format("SELECT username, password FROM User WHERE username = '%s';",userName);
 		db.initialize();
 		ResultSet rs=db.makeSingleQuery(query);
 		rs.beforeFirst();
 		rs.next();
-		String password= rs.getString(1);
+		userName = rs.getString(1);
+		String password = rs.getString(2);
 		User e=new User(userName,password);
 		rs.close();
 		db.close();

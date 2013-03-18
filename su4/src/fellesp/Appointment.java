@@ -73,7 +73,7 @@ public class Appointment {
 	}
 	
 	public String toString() {
-		String s = "Dato: " + getDate() + "\n Start: " + getStartTime() + "\n Slutt: " + getEndTime() + "\n på: " + getPlace() + "\n Beskrivelse: " +getDescription();
+		String s = "AID: "+ getId() + "\n Dato: " + getDate() + "\n Start: " + getStartTime() + "\n Slutt: " + getEndTime() + "\n Hvor: " + getPlace() + "\n Beskrivelse: " +getDescription();
 		return s;
 	}
 

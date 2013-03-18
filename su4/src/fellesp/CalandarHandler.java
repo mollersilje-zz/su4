@@ -3,14 +3,9 @@ package fellesp;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Time;
 import java.util.ArrayList;
-import java.sql.Date;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Properties;
 import java.util.Scanner;
@@ -27,7 +22,6 @@ public class CalandarHandler{
 	private static boolean LoggedIn=false;
 	private static boolean ViewingCalendar=false;
 	private static User user;
-	//  private static Appointment appointment;
 	private static InviteFactory infac;
 	private static UserFactory usfac;
 	private static AppointmentFactory apfac;
@@ -35,12 +29,14 @@ public class CalandarHandler{
 	private static String password;
 	private static Scanner sc;
 	private static ArrayList<Integer> notRespondedList;
-	private static Calendar cal; 
+	private static Calendar cal;
+	private static int weekNumber;
 
 	public static void main(String[] args) throws FileNotFoundException, IOException, ClassNotFoundException, SQLException{
 		sc = new Scanner(System.in);
 		Properties prop = new Properties();
 		prop.load(new FileInputStream("./Properties.properties"));
+		cal = Calendar.getInstance();
 		infac = new InviteFactory(prop);
 		usfac = new UserFactory(prop);
 		apfac = new AppointmentFactory(prop);
@@ -53,38 +49,41 @@ public class CalandarHandler{
 		}
 
 		while (LoggedIn){ 
-			System.out.println("Hva vil du gjøre nå? \n 1) Sjekke nye invitasjoner \n 2) Sjekke avslag \n 3) Opprette avtale/møte \n 4) Endre avtale/møte \n 5) Slette avtale/møte" +
-					" \n 6) Sette alam på avtale \n 7) Logge ut \n");
+			System.out.println("Hva vil du gjøre nå? \n 1) Se Kalender \n 2) Sjekke nye invitasjoner \n " +
+					"3) Sjekke avslag \n 4) Opprette avtale/møte \n 5) Endre avtale/møte \n 6) Slette avtale/møte" +
+					" \n 7) Sette alarm på avtale \n 8) Logge ut \n");
 			String start = sc.nextLine();
 
 			switch(start){
-			case "1": handleInvites(); break; // Skriver ikke ut dato og tid riktig. Kan gjøres "finere".
-			case "2": checkDeclines(username); break;
+			case "1": defaultWeekNumber(); ViewingCalendar = true; break;
+			case "2": handleInvites(); break; // Skriver ikke ut dato og tid riktig. Kan gjøres "finere".
+			case "3": checkDeclines(username); break;
 
-			case "3": try {
+			case "4": try {
 				addAppointment(); break;//Fikse dato og tid-objekter. Ellers alt ok.
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} break;
-			case "4": changeAppointment(); break;
-			case "5": deleteAppointment(); break;
-			case "6": addAlarm(); break;
+			case "5": changeAppointment(); break;
+			case "6": deleteAppointment(); break;
+			case "7": addAlarm(); break;
 
-			case "7": LogOut(); break; // IKKE ferdig enda.
+			case "8": LogOut(); break; // IKKE ferdig enda.
 
 			default: System.out.println("Skriv inn gyldig tall.\n"); break;
 			}
 			
 			while(ViewingCalendar){
-				System.out.println(viewCalendar(user.getUsername()));
-				System.out.println("1) Forrige Uke \n 2) Neste Uke \n 3) Se en annens kalender \n 4) Tilbake til hovedmeny");
-				switch(start){
-				case "1": handleInvites(); break; // Skriver ikke ut dato og tid riktig. Kan gjøres "finere".
-				case "2": checkDeclines(username); break;
-
-				case "3":
-					
+				String out = viewCalendar(username, weekNumber);
+				System.out.println(String.format("Du ser nå på %ss kalender for uke ", username) + out);
+				System.out.println(" 1) Neste Uke \n 2) Forrige Uke \n 3) Se en annens kalender \n 4) Tilbake til hovedmeny");
+				String Brynjar = sc.nextLine();
+				switch(Brynjar){
+				case "1": incrementWeekNumber(); break; 
+				case "2": decrementWeekNumber(); break;
+				case "3": changeUser(); break;
+				case "4": username = user.getUsername(); ViewingCalendar = false; break;
 				default: System.out.println("Skriv inn gyldig tall."); break;
 				}
 			}
@@ -93,6 +92,12 @@ public class CalandarHandler{
 
 	}
 
+
+	private static void changeUser() {
+		System.out.println("Hvilken brukers kalender ønsker du å se?:");
+		username = sc.nextLine();
+		
+	}
 
 	private static void addAlarm() throws ClassNotFoundException, SQLException {
 		System.out.println("Skriv inn AppointmentID for møtet: ");
@@ -125,6 +130,7 @@ public class CalandarHandler{
 
 		LogInCheck(username, password);
 		if (LoggedIn){
+			username = user.getUsername();
 			System.out.println("Du er logget inn!");
 		}
 		else{ System.out.println("Feil passord.");}
@@ -147,7 +153,7 @@ public class CalandarHandler{
 
 			System.out.println("Ønsker du å svare på invitasjoner nå? (JA/NEI)");
 			String answerInvites = sc.nextLine();
-			if (answerInvites.equals("JA")){
+			if (answerInvites.equalsIgnoreCase("JA")){
 				System.out.println("Skriv inn appointmentID: ");
 				String id = sc.nextLine();
 				int intid = Integer.parseInt(id);
@@ -155,11 +161,11 @@ public class CalandarHandler{
 				String respons = sc.nextLine();
 				int intrespons;
 				while (1>0){
-					if(respons.equals("Godta")){
+					if(respons.equalsIgnoreCase("Godta")){
 						intrespons=2;
 						break;
 					}
-					else if (respons.equals("Avslå")){
+					else if (respons.equalsIgnoreCase("Avslå")){
 						intrespons=3;
 						break;
 					}
@@ -170,7 +176,7 @@ public class CalandarHandler{
 				InviteFactory.updateInviteResponse(username, intrespons, intid);
 
 			}
-			else if (answerInvites.equals("NEI")){
+			else if (answerInvites.equalsIgnoreCase("NEI")){
 				System.out.println("Du har valgt å ikke svare på invitasjoner nå.");
 			}
 			else{System.out.println("Du skrev feil input og har blitt sendt tilbake til hovedmeny. \n");}
@@ -225,17 +231,17 @@ public class CalandarHandler{
 		System.out.println("Vil du lage en avtale eller et møte (Avtale/Møte)? :");
 		String meeting = sc.nextLine();
 
-		if (meeting.equals("Møte")){
+		if (meeting.equalsIgnoreCase("Møte")){
 			meetingbol = true;
 			System.out.println("Skriv inn deltager (en om gangen). Avslutt med 'Ferdig'.");
 			String svar = "";
-			while (!svar.equals("Ferdig")){
+			while (!svar.equalsIgnoreCase("Ferdig")){
 				svar = sc.nextLine();
 				list.add(svar);
 			}
 			// DATO
 			System.out.println("Skriv inn dato på formen YYYY-MM-DD: ");
-			String dateString = sc.nextLine(); 
+			String dateString = sc.nextLine();
 			// TID
 			System.out.println("Skriv inn starttid på formen hh:mm:ss : ");
 			String startTime = sc.nextLine();
@@ -355,21 +361,20 @@ public class CalandarHandler{
 		System.out.println("Du er nå logget ut.");
 	}
 	
-	public static String viewCalendar(String userName) throws ClassNotFoundException, SQLException{
+	public static String viewCalendar(String userName, int weekNumber) throws ClassNotFoundException, SQLException{
 		ViewingCalendar = true;
-		Calendar.getInstance();
 		String s = "";
-		ArrayList<Appointment> apList = viewCalendarWeek(userName, cal.get(Calendar.WEEK_OF_YEAR));
-		s = cal.get(Calendar.WEEK_OF_YEAR) + "\n";
+		ArrayList<Appointment> apList = viewCalendarWeek(userName, weekNumber);
+		s = weekNumber + "\n";
 		for (int i = 0; i < apList.size(); i++){
-			s = apList.toString() + "\n";
+			s = s + apList.toString() + "\n";
 		}
 		return s;
 	}
 	
 	private static ArrayList<Appointment> viewCalendarWeek(String userName, int weekNumber) throws ClassNotFoundException, SQLException {
 		ArrayList<Appointment> appointmentList = new ArrayList<Appointment>();
-		ArrayList<Integer> aIDList = new ArrayList<Integer>();
+		ArrayList<Integer> aIDList = InviteFactory.getInviteApointmentID(userName);
 		for (int i = 0; i < aIDList.size(); i++){
 			Appointment a = AppointmentFactory.getAppointment(aIDList.get(i));
 			String date = a.getDate();
@@ -378,6 +383,7 @@ public class CalandarHandler{
 			if (week == weekNumber){
 				appointmentList.add(a);
 			}
+		cal = Calendar.getInstance();
 		}
 		return appointmentList;	
 	}
@@ -389,6 +395,17 @@ public class CalandarHandler{
 			d[i] = Integer.parseInt(b[i]);
 		}
 		cal.set(d[0], d[1] - 1, d[2]);
+	}
+	
+	private static void incrementWeekNumber(){
+		weekNumber = weekNumber + 1;
+	}
+	private static void decrementWeekNumber(){
+		weekNumber = weekNumber - 1;
+	}
+	private static void defaultWeekNumber(){
+		cal.getInstance();
+		weekNumber = cal.get(Calendar.WEEK_OF_YEAR);
 	}
 
 
