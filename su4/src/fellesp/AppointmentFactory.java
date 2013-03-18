@@ -184,6 +184,10 @@ public class AppointmentFactory {
 			availableRooms.add(rs.getString("roomnumber"));
 		}
 		
+		for (int i = 0; i<= availableRooms.size() - 1;i++) {
+			System.out.println(availableRooms.get(i));
+		}
+		
 		
 		rs.close();
 		db.close();
