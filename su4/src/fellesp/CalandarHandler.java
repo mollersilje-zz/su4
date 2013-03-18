@@ -68,7 +68,7 @@ public class CalandarHandler{
 				e.printStackTrace();
 			} break;
 			case "4": changeAppointment(); break;
-			case "5": 
+			case "5": deleteAppointment(); break;
 
 
 			case "7": LogOut(); break; // IKKE ferdig enda.
@@ -217,8 +217,8 @@ public class CalandarHandler{
 
 		if (meeting.equals("Møte")){
 			meetingbol = true;
-			System.out.println("Skriv inn deltager (en om gangen). Avslutt med 'Ferdig'");
-			String svar = null;
+			System.out.println("Skriv inn deltager (en om gangen). Avslutt med 'Ferdig'.");
+			String svar = "";
 			while (!svar.equals("Ferdig")){
 				svar = sc.nextLine();
 				list.add(svar);
@@ -232,13 +232,16 @@ public class CalandarHandler{
 			System.out.println("Skriv inn sluttid på formen hh:mm:ss : ");
 			String endTime = sc.nextLine();
 
-			// STED
-			System.out.println("Skriv inn sted: ");
-			place = sc.nextLine();
 
 			// Beskrivelse
 			System.out.println("Skriv inn beskrivelse: ");
 			description = sc.nextLine();
+			
+			// Reservere møterom
+			System.out.println("Disse rommene er ledige da: ");
+			AppointmentFactory.availableRooms(dateString, startTime, endTime);
+			System.out.println("Skriv inn rom du vil reservere: ");
+			place = sc.nextLine();
 
 			Appointment a = AppointmentFactory.createAppointment(dateString, startTime, endTime, place, description, meetingbol, username);
 			for (String user:list){
@@ -246,8 +249,29 @@ public class CalandarHandler{
 			}
 
 		}
-		else {
+		else if (meeting.equals("Avtale")){ 
 			
+			meetingbol = false;
+			
+			// DATO
+			System.out.println("Skriv inn dato på formen YYYY-MM-DD: ");
+			String dateString = sc.nextLine();
+			
+			// TID
+			System.out.println("Skriv inn starttid på formen hh:mm:ss : ");
+			String startTime = sc.nextLine();
+			System.out.println("Skriv inn sluttid på formen hh:mm:ss : ");
+			String endTime = sc.nextLine();
+			
+			// Beskrivelse
+			System.out.println("Skriv inn beskrivelse: ");
+			description = sc.nextLine();
+			
+			//Sted
+			System.out.println("Skriv inn sted: ");
+			place = sc.nextLine();
+			
+			Appointment b = AppointmentFactory.createAppointment(dateString, startTime, endTime, place, description, meetingbol, username);
 		}
 	}
 
@@ -269,8 +293,15 @@ public class CalandarHandler{
 
 		}
 
-
-
+	}
+	
+	public static void deleteAppointment() throws ClassNotFoundException, SQLException {
+		System.out.println("Skriv inn avtaleID som du ønsker å slette: ");
+		String id = sc.nextLine();
+		int idint = Integer.parseInt(id);
+		if (AppointmentFactory.isMeeting(idint)){
+			AppointmentFactory.deleteAppointment(idint);
+		}
 	}
 
 	public static void changeDate(int id) throws ClassNotFoundException, SQLException{
