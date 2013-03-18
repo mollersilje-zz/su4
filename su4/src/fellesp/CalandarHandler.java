@@ -283,7 +283,7 @@ public class CalandarHandler{
 
 
 	public static void changeAppointment() throws ClassNotFoundException, SQLException{
-		System.out.println("Skriv inn avtaleID som du ønsker å endre på: )");
+		System.out.println("Skriv inn avtaleID som du ønsker å endre på: ");
 		String id = sc.nextLine();
 		int idint = Integer.parseInt(id);
 		if (AppointmentFactory.isMeeting(idint)){
