@@ -78,7 +78,7 @@ public class InviteFactory {
 	}
 	
 	public static ArrayList<Integer> getInviteApointmentID(String username) throws ClassNotFoundException, SQLException{
-		String query = String.format("SELECT appointmentID FROM Invite WHERE username = '%s' AND response = '2';",username);
+		String query = String.format("SELECT Invite.appointmentID FROM Invite, Appointment WHERE username = '%s' AND response = '2' AND Invite.appointmentID = Appointment.appointmentID Group By date, starttime;",username);
 		db.initialize();
 		ResultSet rs=db.makeSingleQuery(query);
 		ArrayList<Integer> list = new ArrayList<Integer>();
