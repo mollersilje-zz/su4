@@ -95,8 +95,12 @@ public class CalandarHandler{
 
 
 	private static void addAlarm() {
-		// TODO Auto-generated method stub
-		
+		System.out.println("Skriv inn AppointmentID for møtet: ");
+		String id = sc.nextLine();
+		int intid = Integer.parseInt(id);
+		System.out.println("Skriv inn tidspunkt for alarm: ");
+		String alarm = sc.nextLine();
+		AppointmentFactory.addAlarm(intid, alarm);
 	}
 
 
