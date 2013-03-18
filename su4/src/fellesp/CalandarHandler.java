@@ -69,7 +69,7 @@ public class CalandarHandler{
 			} break;
 			case "4": changeAppointment(); break;
 			case "5": deleteAppointment(); break;
-
+			case "6": addAlarm(); break;
 
 			case "7": LogOut(); break; // IKKE ferdig enda.
 
@@ -91,6 +91,12 @@ public class CalandarHandler{
 
 		}
 
+	}
+
+
+	private static void addAlarm() {
+		// TODO Auto-generated method stub
+		
 	}
 
 
