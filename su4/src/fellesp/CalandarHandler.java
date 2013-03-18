@@ -73,7 +73,7 @@ public class CalandarHandler{
 
 			case "7": LogOut(); break; // IKKE ferdig enda.
 
-			default: System.out.println("Skriv inn gyldig tall."); break;
+			default: System.out.println("Skriv inn gyldig tall.\n"); break;
 			}
 			
 			while(ViewingCalendar){
@@ -94,7 +94,7 @@ public class CalandarHandler{
 	}
 
 
-	private static void addAlarm() {
+	private static void addAlarm() throws ClassNotFoundException, SQLException {
 		System.out.println("Skriv inn AppointmentID for møtet: ");
 		String id = sc.nextLine();
 		int intid = Integer.parseInt(id);
@@ -290,26 +290,56 @@ public class CalandarHandler{
 		System.out.println("Skriv inn avtaleID som du ønsker å endre på: ");
 		String id = sc.nextLine();
 		int idint = Integer.parseInt(id);
-		if (AppointmentFactory.isMeeting(idint)){
-
-		}
-		else {
+		if (!AppointmentFactory.isMeeting(idint)){
 			System.out.println("Hva vil du endre på? \n 1) Endre dato \n 2) Endre starttid \n 3) Endre slutttid \n 4) Endre sted \n 5) Endre beskrivelse" + "\n");
 			String svar = sc.nextLine();
 			switch (svar){
 			case "1": changeDate(idint);break;
+			case "2": changeStartTime(idint); break;
+			case "3": changeEndTime(idint); break;
+			case "4": changePlace(idint); break;
+			case "5": changeDescription(idint); break;
+			default: System.out.println("Skriv inn gyldig tall.");
 			}
-
-
 		}
-
 	}
 	
+	private static void changeDescription(int id) throws ClassNotFoundException, SQLException {
+		System.out.println("Skriv inn ny beskrivelse: ");
+		String des = sc.nextLine();
+		AppointmentFactory.updateAppointmentDescription(id, des);
+		
+	}
+
+
+	private static void changePlace(int id) throws ClassNotFoundException, SQLException {
+		System.out.println("Skriv inn nytt sted: ");
+		String place = sc.nextLine();
+		AppointmentFactory.updateAppointmentPlace(id, place);
+		
+	}
+
+
+	private static void changeEndTime(int id) throws ClassNotFoundException, SQLException {
+		System.out.println("Skriv inn ny slutt-tid på formen hh:mm:ss: ");
+		String endTime = sc.nextLine();
+		AppointmentFactory.updateAppointmentEndTime(id, endTime);
+	}
+
+
+	private static void changeStartTime(int id) throws ClassNotFoundException, SQLException {
+		System.out.println("Skriv inn ny start-tid på formen hh:mm:ss: ");
+		String startTime = sc.nextLine();
+		AppointmentFactory.updateAppointmentStartTime(id, startTime);
+		
+	}
+
+
 	public static void deleteAppointment() throws ClassNotFoundException, SQLException {
 		System.out.println("Skriv inn avtaleID som du ønsker å slette: ");
 		String id = sc.nextLine();
 		int idint = Integer.parseInt(id);
-		if (AppointmentFactory.isMeeting(idint)){
+		if (!AppointmentFactory.isMeeting(idint)){
 			AppointmentFactory.deleteAppointment(idint);
 		}
 	}

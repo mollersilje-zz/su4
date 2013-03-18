@@ -197,11 +197,10 @@ public class AppointmentFactory {
 		
 	}
 	
-	public static void addAlarm(int id, String alarmtime){
+	public static void addAlarm(int id, String alarmtime) throws ClassNotFoundException, SQLException{
 		String query = String.format("UPDATE Appointment SET alarm = '" + alarmtime + "' WHERE appointmentID = '" + id +"'");
 		db.initialize();
-		ResultSet rs = db.makeSingleQuery(query);
-		rs.close();
+		db.makeSingleUpdate(query);
 		db.close();
 	}
 	
