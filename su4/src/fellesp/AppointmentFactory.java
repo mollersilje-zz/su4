@@ -171,11 +171,10 @@ public class AppointmentFactory {
 	
 	// Har ikke update for owner fordi denne skal ikke kunne endres!
 	
-	public static ArrayList<String> availableRooms(Date date, Time starttime, Time endtime) throws ClassNotFoundException, SQLException {
-		java.sql.Date sqlDate = new java.sql.Date(date.getTime());
-		java.sql.Time sqlStartTime = new java.sql.Time(starttime.getTime());
-		java.sql.Time sqlEndTime = new java.sql.Time(endtime.getTime());
-		String query = String.format("Select roomnumber From MeetingRoom Where roomnumber NOT IN (Select place From Appointment Where date = '" + sqlDate + "' and ((starttime >= '" + sqlStartTime + "' and starttime <= '" + sqlEndTime + "') or (endtime >= '" + sqlStartTime + "' and endtime <= '" + sqlEndTime + "') or (starttime < '" + sqlStartTime + "' and endtime > '" + sqlEndTime + "')))");
+	public static ArrayList<String> availableRooms(String date, String starttime, String endtime) throws ClassNotFoundException, SQLException {
+
+		
+		String query = String.format("Select roomnumber From MeetingRoom Where roomnumber NOT IN (Select place From Appointment Where date = '" + date + "' and ((starttime >= '" + starttime + "' and starttime <= '" + endtime + "') or (endtime >= '" + starttime + "' and endtime <= '" + endtime + "') or (starttime < '" + starttime + "' and endtime > '" + endtime + "')))");
 
 		ArrayList<String> availableRooms = new ArrayList<String>();
 		db.initialize();
