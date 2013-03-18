@@ -3,6 +3,7 @@ package fellesp;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.sql.Date;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Properties;
 import java.util.Scanner;
 
@@ -23,16 +25,17 @@ import fellesp.UserFactory;
 public class CalandarHandler{
 
 	private static boolean LoggedIn=false;
+	private static boolean ViewingCalendar=false;
 	private static User user;
 	//  private static Appointment appointment;
 	private static InviteFactory infac;
 	private static UserFactory usfac;
 	private static AppointmentFactory apfac;
-	private static CalendarFactory cafac;
 	private static String username;
 	private static String password;
 	private static Scanner sc;
 	private static ArrayList<Integer> notRespondedList;
+	private static Calendar cal; 
 
 	public static void main(String[] args) throws FileNotFoundException, IOException, ClassNotFoundException, SQLException{
 		sc = new Scanner(System.in);
@@ -41,7 +44,6 @@ public class CalandarHandler{
 		infac = new InviteFactory(prop);
 		usfac = new UserFactory(prop);
 		apfac = new AppointmentFactory(prop);
-		cafac = new CalendarFactory(prop);
 
 
 
@@ -71,7 +73,20 @@ public class CalandarHandler{
 
 			case "7": LogOut(); break; // IKKE ferdig enda.
 
-			default: System.out.println("Skriv inn riktig tall."); break;
+			default: System.out.println("Skriv inn gyldig tall."); break;
+			}
+			
+			while(ViewingCalendar){
+				System.out.println(viewCalendar(user.getUsername()));
+				System.out.println("1) Forrige Uke \n 2) Neste Uke \n 3) Se en annens kalender \n 4) Tilbake til hovedmeny");
+				switch(start){
+				case "1": handleInvites(); break; // Skriver ikke ut dato og tid riktig. Kan gjøres "finere".
+				case "2": checkDeclines(username); break;
+
+				case "3":
+					
+				default: System.out.println("Skriv inn gyldig tall."); break;
+				}
 			}
 
 		}
@@ -81,10 +96,13 @@ public class CalandarHandler{
 
 	public static void LogInCheck(String username, String password1) throws ClassNotFoundException, SQLException{
 		String password2 = null;
-		password2 = UserFactory.getPassword(username);
+		user = UserFactory.getUser(username);
+		password2 = user.getPassword();
 
 		if (password1.equals(password2)) {
 			LoggedIn = true;
+		} else {
+			user = null;
 		}
 
 	}
@@ -266,8 +284,40 @@ public class CalandarHandler{
 		System.out.println("Du er nå logget ut.");
 	}
 	
-	public static void viewCalendar(String userName){
-		
+	public static String viewCalendar(String userName) throws ClassNotFoundException, SQLException{
+		ViewingCalendar = true;
+		Calendar.getInstance();
+		String s = "";
+		ArrayList<Appointment> apList = viewCalendarWeek(userName, cal.get(Calendar.WEEK_OF_YEAR));
+		s = cal.get(Calendar.WEEK_OF_YEAR) + "\n";
+		for (int i = 0; i < apList.size(); i++){
+			s = apList.toString() + "\n";
+		}
+		return s;
+	}
+	
+	private static ArrayList<Appointment> viewCalendarWeek(String userName, int weekNumber) throws ClassNotFoundException, SQLException {
+		ArrayList<Appointment> appointmentList = new ArrayList<Appointment>();
+		ArrayList<Integer> aIDList = new ArrayList<Integer>();
+		for (int i = 0; i < aIDList.size(); i++){
+			Appointment a = AppointmentFactory.getAppointment(aIDList.get(i));
+			String date = a.getDate();
+			setCalendar(date);
+			int week = cal.get(Calendar.WEEK_OF_YEAR);
+			if (week == weekNumber){
+				appointmentList.add(a);
+			}
+		}
+		return appointmentList;	
+	}
+	
+	private static void setCalendar(String date){
+		String[] b = date.split("-");
+		int[] d = new int[3];
+		for (int i = 0; i < b.length; i++){
+			d[i] = Integer.parseInt(b[i]);
+		}
+		cal.set(d[0], d[1] - 1, d[2]);
 	}
 
 

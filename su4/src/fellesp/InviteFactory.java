@@ -32,7 +32,7 @@ public class InviteFactory {
 	{
 		Invite e=new Invite(username, aID);
 		String query=String.format("insert into Invite " +
-				"(response,username,appointmentID) values (1,'%s', '%d')", username, aID); 
+				"(response,username,appointmentID) values (2,'%s', '%d')", username, aID); 
 		db.initialize();
 		db.makeSingleUpdate(query);
 		db.close();
