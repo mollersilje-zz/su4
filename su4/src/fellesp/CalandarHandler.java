@@ -109,7 +109,6 @@ public class CalandarHandler{
 		AppointmentFactory.addAlarm(intid, alarm);
 	}
 
-
 	public static void LogInCheck(String username, String password1) throws ClassNotFoundException, SQLException{
 		String password2 = null;
 		user = UserFactory.getUser(username);
@@ -223,11 +222,34 @@ public class CalandarHandler{
 	}
 
 	public static void checkCancellations(){
+		// Denne skal sjekke om noen har meldt avbud på et møte KRAV 9
+		
+	}
+	
+	public static void giveCancellation() throws ClassNotFoundException, SQLException{
+		// KRAV 9
+		ArrayList<Integer> listWhereOwner = AppointmentFactory.getMeetingWhereOwner(username);
+		ArrayList<Integer> acceptedMeetings = InviteFactory.getAcceptedInvitesForThisUse(username);
+		for (int i: acceptedMeetings){
+			if (listWhereOwner.contains(i)){
+				acceptedMeetings.remove(i);
+			}
+		}
+		
+		System.out.println("Du skal på disse møtene:");
+		for (int i: acceptedMeetings){
+			System.out.println("ID: " + i);
+		}
+		
+		System.out.println("Hvilket møte vil du melde avbud for?");
+		String svar = sc.nextLine();
+		// InviteFactory.deleteInviteUser(username); 
 		
 		
 	}
 	
 	public static void checkCancelled() throws ClassNotFoundException, SQLException{
+		// Denne sjekker om det er noen avlyste møter
 		ArrayList<Integer> cancelled = InviteFactory.findCancelledAppointments(username);
 		if (cancelled.isEmpty()){
 			System.out.println("Du har ingen avlyste møter");
@@ -320,7 +342,6 @@ public class CalandarHandler{
 		}
 	}
 
-
 	public static void changeAppointment() throws ClassNotFoundException, SQLException{
 		System.out.println("Skriv inn avtaleID som du ï¿½nsker ï¿½ endre pï¿½: ");
 		String id = sc.nextLine();
@@ -363,7 +384,6 @@ public class CalandarHandler{
 
 	}
 
-
 	private static void changePlace(int id) throws ClassNotFoundException, SQLException {
 		System.out.println("Skriv inn nytt sted: ");
 		String place = sc.nextLine();
@@ -371,13 +391,11 @@ public class CalandarHandler{
 
 	}
 
-
 	private static void changeEndTime(int id) throws ClassNotFoundException, SQLException {
 		System.out.println("Skriv inn ny slutt-tid pï¿½ formen hh:mm:ss: ");
 		String endTime = sc.nextLine();
 		AppointmentFactory.updateAppointmentEndTime(id, endTime);
 	}
-
 
 	private static void changeStartTime(int id) throws ClassNotFoundException, SQLException {
 		System.out.println("Skriv inn ny start-tid pï¿½ formen hh:mm:ss: ");
@@ -385,7 +403,6 @@ public class CalandarHandler{
 		AppointmentFactory.updateAppointmentStartTime(id, startTime);
 
 	}
-
 
 	public static void deleteAppointment() throws ClassNotFoundException, SQLException {
 		System.out.println("Skriv inn avtaleID som du ï¿½nsker ï¿½ slette: ");
@@ -402,27 +419,7 @@ public class CalandarHandler{
 			
 		}
 	}
-
-	public static void giveCancellation() throws ClassNotFoundException, SQLException{
-		ArrayList<Integer> listWhereOwner = AppointmentFactory.getMeetingWhereOwner(username);
-		ArrayList<Integer> acceptedMeetings = InviteFactory.getAcceptedInvitesForThisUse(username);
-		for (int i: acceptedMeetings){
-			if (listWhereOwner.contains(i)){
-				acceptedMeetings.remove(i);
-			}
-		}
-		
-		System.out.println("Du skal på disse møtene:");
-		for (int i: acceptedMeetings){
-			System.out.println("ID: " + i);
-		}
-		
-		System.out.println("Hvilket møte vil du melde avbud for?");
-		String svar = sc.nextLine();
-		// InviteFactory.deleteInviteUser(username); 
-		
-		
-	}
+	
 	public static void changeDate(int id) throws ClassNotFoundException, SQLException{
 		System.out.println("Skriv inn ny dato pï¿½ format YYYY-MM-DD : ");
 		String datestring = sc.nextLine();
@@ -521,7 +518,5 @@ public class CalandarHandler{
 		}
 		return mote;
 	}
-
-
 
 }
