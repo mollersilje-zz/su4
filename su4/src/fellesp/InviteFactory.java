@@ -182,7 +182,7 @@ public class InviteFactory {
 		return deletedaID;
 	}
 	
-	public static boolean isMeetingUnanswered(String aID) throws ClassNotFoundException, SQLException {
+	public static boolean isMeetingUnanswered(int aID) throws ClassNotFoundException, SQLException {
 		String query = String.format("SELECT response, appointmentID FROM Invite WHERE appointmentID = " + aID);
 		ArrayList<String> list = new ArrayList<String>();
 		db.initialize();
@@ -205,7 +205,7 @@ public class InviteFactory {
 		
 	}
 	
-	public static boolean isMeetingAccepted(String aID) throws ClassNotFoundException, SQLException {
+	public static boolean isMeetingAccepted(int aID) throws ClassNotFoundException, SQLException {
 		String query = String.format("SELECT response, appointmentID FROM Invite WHERE appointmentID = " + aID);
 		ArrayList<String> list = new ArrayList<String>();
 		db.initialize();
@@ -228,7 +228,7 @@ public class InviteFactory {
 		
 	}
 	
-	public static boolean isMeetingDeclined(String aID) throws ClassNotFoundException, SQLException {
+	public static boolean isMeetingDeclined(int aID) throws ClassNotFoundException, SQLException {
 		String query = String.format("SELECT response, appointmentID FROM Invite WHERE appointmentID = " + aID);
 		ArrayList<String> list = new ArrayList<String>();
 		db.initialize();
