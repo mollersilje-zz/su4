@@ -181,7 +181,75 @@ public class InviteFactory {
 		db.close();
 		return deletedaID;
 	}
+	
+	public static boolean isMeetingUnanswered(String aID) throws ClassNotFoundException, SQLException {
+		String query = String.format("SELECT response, appointmentID FROM Invite WHERE appointmentID = " + aID);
+		ArrayList<String> list = new ArrayList<String>();
+		db.initialize();
+		ResultSet rs = db.makeSingleQuery(query);
+		while (rs.next()){
+			list.add(rs.getString("response"));
+		}
+		
+		
+		rs.close();
+		db.close();
+		
+		
+		if (list.contains("1")) {
+			return true;
+		}
+		
+		
+		return false;
+		
+	}
+	
+	public static boolean isMeetingAccepted(String aID) throws ClassNotFoundException, SQLException {
+		String query = String.format("SELECT response, appointmentID FROM Invite WHERE appointmentID = " + aID);
+		ArrayList<String> list = new ArrayList<String>();
+		db.initialize();
+		ResultSet rs = db.makeSingleQuery(query);
+		while (rs.next()){
+			list.add(rs.getString("response"));
+		}
+		
+		
+		rs.close();
+		db.close();
+		
+		if (list.contains("3") || list.contains("1")) {
+			return false;
+		}
+				
 
+		
+		return true;
+		
+	}
+	
+	public static boolean isMeetingDeclined(String aID) throws ClassNotFoundException, SQLException {
+		String query = String.format("SELECT response, appointmentID FROM Invite WHERE appointmentID = " + aID);
+		ArrayList<String> list = new ArrayList<String>();
+		db.initialize();
+		ResultSet rs = db.makeSingleQuery(query);
+		while (rs.next()){
+			list.add(rs.getString("response"));
+		}
+		
+		
+		rs.close();
+		db.close();
+		
+		
+		if (list.contains("3")) {
+			return true;
+		}
+		
+		
+		return false;
+		
+	}
 
 }
 
