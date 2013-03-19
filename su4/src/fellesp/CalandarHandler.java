@@ -49,14 +49,14 @@ public class CalandarHandler{
 		}
 
 		while (LoggedIn){ 
-			System.out.println("Hva vil du gjøre nå? \n 1) Se Kalender \n 2) Sjekke nye invitasjoner \n " +
-					"3) Sjekke avslag \n 4) Opprette avtale/møte \n 5) Endre avtale/møte \n 6) Slette avtale/møte" +
-					" \n 7) Sette alarm på avtale \n 8) Logge ut \n");
+			System.out.println("Hva vil du gjï¿½re nï¿½? \n 1) Se Kalender \n 2) Sjekke nye invitasjoner \n " +
+					"3) Sjekke avslag \n 4) Opprette avtale/mï¿½te \n 5) Endre avtale/mï¿½te \n 6) Slette avtale/mï¿½te" +
+					" \n 7) Sette alarm pï¿½ avtale \n 8) Logge ut \n");
 			String start = sc.nextLine();
 
 			switch(start){
 			case "1": defaultWeekNumber(); ViewingCalendar = true; break;
-			case "2": handleInvites(); break; // Skriver ikke ut dato og tid riktig. Kan gjøres "finere".
+			case "2": handleInvites(); break; // Skriver ikke ut dato og tid riktig. Kan gjï¿½res "finere".
 			case "3": checkDeclines(username); break;
 
 			case "4": try {
@@ -76,7 +76,7 @@ public class CalandarHandler{
 			
 			while(ViewingCalendar){
 				String out = viewCalendar(username, weekNumber);
-				System.out.println(String.format("Du ser nå på %ss kalender for uke ", username) + out);
+				System.out.println(String.format("Du ser nï¿½ pï¿½ %ss kalender for uke ", username) + out);
 				System.out.println(" 1) Neste Uke \n 2) Forrige Uke \n 3) Se en annens kalender \n 4) Tilbake til hovedmeny");
 				String Brynjar = sc.nextLine();
 				switch(Brynjar){
@@ -94,13 +94,13 @@ public class CalandarHandler{
 
 
 	private static void changeUser() {
-		System.out.println("Hvilken brukers kalender ønsker du å se?:");
+		System.out.println("Hvilken brukers kalender ï¿½nsker du ï¿½ se?:");
 		username = sc.nextLine();
 		
 	}
 
 	private static void addAlarm() throws ClassNotFoundException, SQLException {
-		System.out.println("Skriv inn AppointmentID for møtet: ");
+		System.out.println("Skriv inn AppointmentID for mï¿½tet: ");
 		String id = sc.nextLine();
 		int intid = Integer.parseInt(id);
 		System.out.println("Skriv inn tidspunkt for alarm: ");
@@ -137,7 +137,7 @@ public class CalandarHandler{
 	}
 
 	public static void handleInvites() throws ClassNotFoundException, SQLException{
-		// Håndterer ubesvarte invitasjoner
+		// Hï¿½ndterer ubesvarte invitasjoner
 		notRespondedList = new ArrayList<Integer>();
 		notRespondedList = checkInvites(username);
 		if (notRespondedList == null){
@@ -151,13 +151,13 @@ public class CalandarHandler{
 			}  
 
 
-			System.out.println("Ønsker du å svare på invitasjoner nå? (JA/NEI)");
+			System.out.println("ï¿½nsker du ï¿½ svare pï¿½ invitasjoner nï¿½? (JA/NEI)");
 			String answerInvites = sc.nextLine();
 			if (answerInvites.equalsIgnoreCase("JA")){
 				System.out.println("Skriv inn appointmentID: ");
 				String id = sc.nextLine();
 				int intid = Integer.parseInt(id);
-				System.out.println("Skriv inn respons(Godta/Avslå): ");
+				System.out.println("Skriv inn respons(Godta/Avslï¿½): ");
 				String respons = sc.nextLine();
 				int intrespons;
 				while (1>0){
@@ -165,19 +165,19 @@ public class CalandarHandler{
 						intrespons=2;
 						break;
 					}
-					else if (respons.equalsIgnoreCase("Avslå")){
+					else if (respons.equalsIgnoreCase("Avslï¿½")){
 						intrespons=3;
 						break;
 					}
-					else {System.out.println("Skriv inn Godta eller Avslå");}
-					// Hvis Godta må det opprettes Appointment i kalender
+					else {System.out.println("Skriv inn Godta eller Avslï¿½");}
+					// Hvis Godta mï¿½ det opprettes Appointment i kalender
 				}
 
 				InviteFactory.updateInviteResponse(username, intrespons, intid);
 
 			}
 			else if (answerInvites.equalsIgnoreCase("NEI")){
-				System.out.println("Du har valgt å ikke svare på invitasjoner nå.");
+				System.out.println("Du har valgt ï¿½ ikke svare pï¿½ invitasjoner nï¿½.");
 			}
 			else{System.out.println("Du skrev feil input og har blitt sendt tilbake til hovedmeny. \n");}
 		}
@@ -216,7 +216,7 @@ public class CalandarHandler{
 
 		for (int aid: declineList){
 			for (String user:InviteFactory.getDeclinedUsers(aid)){
-				System.out.println( user + " har avslått avtale " + aid);
+				System.out.println( user + " har avslï¿½tt avtale " + aid);
 			}
 		}
 	}
@@ -228,10 +228,10 @@ public class CalandarHandler{
 		boolean meetingbol = false;
 		ArrayList<String> list = new ArrayList<String>();
 
-		System.out.println("Vil du lage en avtale eller et møte (Avtale/Møte)? :");
+		System.out.println("Vil du lage en avtale eller et mï¿½te (Avtale/Mï¿½te)? :");
 		String meeting = sc.nextLine();
 
-		if (meeting.equalsIgnoreCase("Møte")){
+		if (meeting.equalsIgnoreCase("Mï¿½te")){
 			meetingbol = true;
 			System.out.println("Skriv inn deltager (en om gangen). Avslutt med 'Ferdig'.");
 			String svar = "";
@@ -240,12 +240,12 @@ public class CalandarHandler{
 				list.add(svar);
 			}
 			// DATO
-			System.out.println("Skriv inn dato på formen YYYY-MM-DD: ");
+			System.out.println("Skriv inn dato pï¿½ formen YYYY-MM-DD: ");
 			String dateString = sc.nextLine();
 			// TID
-			System.out.println("Skriv inn starttid på formen hh:mm:ss : ");
+			System.out.println("Skriv inn starttid pï¿½ formen hh:mm:ss : ");
 			String startTime = sc.nextLine();
-			System.out.println("Skriv inn sluttid på formen hh:mm:ss : ");
+			System.out.println("Skriv inn sluttid pï¿½ formen hh:mm:ss : ");
 			String endTime = sc.nextLine();
 
 
@@ -253,7 +253,7 @@ public class CalandarHandler{
 			System.out.println("Skriv inn beskrivelse: ");
 			description = sc.nextLine();
 			
-			// Reservere møterom
+			// Reservere mï¿½terom
 			System.out.println("Disse rommene er ledige da: ");
 			AppointmentFactory.availableRooms(dateString, startTime, endTime);
 			System.out.println("Skriv inn rom du vil reservere: ");
@@ -271,13 +271,13 @@ public class CalandarHandler{
 			meetingbol = false;
 			
 			// DATO
-			System.out.println("Skriv inn dato på formen YYYY-MM-DD: ");
+			System.out.println("Skriv inn dato pï¿½ formen YYYY-MM-DD: ");
 			String dateString = sc.nextLine();
 			
 			// TID
-			System.out.println("Skriv inn starttid på formen hh:mm:ss : ");
+			System.out.println("Skriv inn starttid pï¿½ formen hh:mm:ss : ");
 			String startTime = sc.nextLine();
-			System.out.println("Skriv inn sluttid på formen hh:mm:ss : ");
+			System.out.println("Skriv inn sluttid pï¿½ formen hh:mm:ss : ");
 			String endTime = sc.nextLine();
 			
 			// Beskrivelse
@@ -295,11 +295,11 @@ public class CalandarHandler{
 
 
 	public static void changeAppointment() throws ClassNotFoundException, SQLException{
-		System.out.println("Skriv inn avtaleID som du ønsker å endre på: ");
+		System.out.println("Skriv inn avtaleID som du ï¿½nsker ï¿½ endre pï¿½: ");
 		String id = sc.nextLine();
 		int idint = Integer.parseInt(id);
 		if (!AppointmentFactory.isMeeting(idint)){
-			System.out.println("Hva vil du endre på? \n 1) Endre dato \n 2) Endre starttid \n 3) Endre slutttid \n 4) Endre sted \n 5) Endre beskrivelse" + "\n");
+			System.out.println("Hva vil du endre pï¿½? \n 1) Endre dato \n 2) Endre starttid \n 3) Endre slutttid \n 4) Endre sted \n 5) Endre beskrivelse" + "\n");
 			String svar = sc.nextLine();
 			switch (svar){
 			case "1": changeDate(idint);break;
@@ -329,14 +329,14 @@ public class CalandarHandler{
 
 
 	private static void changeEndTime(int id) throws ClassNotFoundException, SQLException {
-		System.out.println("Skriv inn ny slutt-tid på formen hh:mm:ss: ");
+		System.out.println("Skriv inn ny slutt-tid pï¿½ formen hh:mm:ss: ");
 		String endTime = sc.nextLine();
 		AppointmentFactory.updateAppointmentEndTime(id, endTime);
 	}
 
 
 	private static void changeStartTime(int id) throws ClassNotFoundException, SQLException {
-		System.out.println("Skriv inn ny start-tid på formen hh:mm:ss: ");
+		System.out.println("Skriv inn ny start-tid pï¿½ formen hh:mm:ss: ");
 		String startTime = sc.nextLine();
 		AppointmentFactory.updateAppointmentStartTime(id, startTime);
 		
@@ -344,7 +344,7 @@ public class CalandarHandler{
 
 
 	public static void deleteAppointment() throws ClassNotFoundException, SQLException {
-		System.out.println("Skriv inn avtaleID som du ønsker å slette: ");
+		System.out.println("Skriv inn avtaleID som du ï¿½nsker ï¿½ slette: ");
 		String id = sc.nextLine();
 		int idint = Integer.parseInt(id);
 		if (!AppointmentFactory.isMeeting(idint)){
@@ -353,14 +353,14 @@ public class CalandarHandler{
 	}
 
 	public static void changeDate(int id) throws ClassNotFoundException, SQLException{
-		System.out.println("Skriv inn ny dato på format YYYY-MM-DD : ");
+		System.out.println("Skriv inn ny dato pï¿½ format YYYY-MM-DD : ");
 		String datestring = sc.nextLine();
 		AppointmentFactory.updateAppointmentDate(id, datestring);
 	}
 
 	public static void LogOut(){
 		LoggedIn=false;
-		System.out.println("Du er nå logget ut.");
+		System.out.println("Du er nï¿½ logget ut.");
 	}
 	
 	public static String viewCalendar(String userName, int weekNumber) throws ClassNotFoundException, SQLException{
@@ -409,6 +409,46 @@ public class CalandarHandler{
 		cal.getInstance();
 		weekNumber = cal.get(Calendar.WEEK_OF_YEAR);
 	}
+	
+	private static boolean isWaitingForAnswer() throws ClassNotFoundException, SQLException {
+		System.out.println("Hvilket mÃ¸te: ");
+		String aID = sc.nextLine();
+		boolean mote = InviteFactory.isMeetingUnanswered(aID);
+		if (mote) {
+			System.out.println("MÃ¸tet er ubesvart");
+		}
+		else if (!mote) {
+			System.out.println("Alle har besvart");
+		}
+		return mote;
+	}
+	
+	private static boolean isAccepted() throws ClassNotFoundException, SQLException {
+		System.out.println("Hvilket mÃ¸te: ");
+		String aID = sc.nextLine();
+		boolean mote = InviteFactory.isMeetingAccepted(aID);
+		if (mote) {
+			System.out.println("Alle har sagt ja");
+		}
+		else if (!mote) {
+			System.out.println("Ikke alle har sagt ja");
+		}
+		return mote;
+	}
+	
+	private static boolean isDeclined() throws ClassNotFoundException, SQLException {
+		System.out.println("Hvilket mÃ¸te: ");
+		String aID = sc.nextLine();
+		boolean mote = InviteFactory.isMeetingDeclined(aID);
+		if (mote) {
+			System.out.println("En eller flere har avslÃ¥tt");
+		}
+		else if (!mote) {
+			System.out.println("Ingen har avslÃ¥tt");
+		}
+		return mote;
+	}
+
 
 
 }
