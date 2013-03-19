@@ -50,30 +50,31 @@ public class CalandarHandler{
 
 		while (LoggedIn){ 
 			System.out.println("Hva vil du gjøre nå? \n 1) Se Kalender \n 2) Sjekke nye invitasjoner \n " +
-					"3) Sjekke avslag \n 4) Opprette avtale/møte \n 5) Endre avtale/møte \n 6) Slette avtale/møte" +
-					" \n 7) Sette alarm på avtale \n 8) Logge ut \n");
+					"3) Sjekke avlyste møter \n 4) Sjekke avslag \n 5) Sjekke avbud \n 6) Opprette avtale/møte \n 7) Endre avtale/møte \n 8) Slette avtale/møte" +
+					" \n 9) Melde avbud på møte \n 10) Sette alarm på avtale \n 11) Logge ut \n");
 			String start = sc.nextLine();
 
 			switch(start){
 			case "1": defaultWeekNumber(); ViewingCalendar = true; break;
-			case "2": handleInvites(); break; // Skriver ikke ut dato og tid riktig. Kan gjøres "finere".
-			case "3": checkDeclines(username); break;
-
-			case "4": try {
-				addAppointment(); break;//Fikse dato og tid-objekter. Ellers alt ok.
+			case "2": handleInvites(); break; 
+			case "3": checkCancelled(); break;
+			case "4": checkDeclines(username); break;
+			case "5": checkCancellations(); break;
+			case "6": try {
+				addAppointment(); break;
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} break;
-			case "5": changeAppointment(); break;
-			case "6": deleteAppointment(); break;
-			case "7": addAlarm(); break;
-
-			case "8": LogOut(); break; // IKKE ferdig enda.
+			case "7": changeAppointment(); break;
+			case "8": deleteAppointment(); break;
+			case "9": giveCancellation(); break;
+			case "10": addAlarm(); break;
+			case "11": LogOut(); break; // IKKE ferdig enda.
 
 			default: System.out.println("Skriv inn gyldig tall.\n"); break;
 			}
-			
+
 			while(ViewingCalendar){
 				String out = viewCalendar(username, weekNumber);
 				System.out.println(String.format("Du ser nå på %ss kalender for uke ", username) + out);
@@ -96,7 +97,7 @@ public class CalandarHandler{
 	private static void changeUser() {
 		System.out.println("Hvilken brukers kalender ønsker du å se?:");
 		username = sc.nextLine();
-		
+
 	}
 
 	private static void addAlarm() throws ClassNotFoundException, SQLException {
@@ -123,7 +124,7 @@ public class CalandarHandler{
 	}
 
 	public static void Login() throws ClassNotFoundException, SQLException{
-		System.out.println("Du er ikke logget inn. Skriv inn brukernavn og passord.\n Brukernavn: ");
+		System.out.println("Du er ikke logget inn. Skriv inn brukernavn og passord.\nBrukernavn: ");
 		username = sc.nextLine();
 		System.out.println("Passord: ");
 		password = sc.nextLine();
@@ -221,6 +222,27 @@ public class CalandarHandler{
 		}
 	}
 
+	public static void checkCancellations(){
+		
+		
+	}
+	
+	public static void checkCancelled() throws ClassNotFoundException, SQLException{
+		ArrayList<Integer> cancelled = InviteFactory.findCancelledAppointments(username);
+		if (cancelled.isEmpty()){
+			System.out.println("Du har ingen avlyste møter");
+		}
+		else {
+			System.out.println("Disse møtene er avlyste: ");
+			for (int i: cancelled){
+				System.out.println("ID: " + i);
+				InviteFactory.deleteInviteAppointmentWhereCancelled(i, username);
+	
+			}
+			System.out.println("Disse er nå slettet fra din kalender.");	
+		}
+		
+	}
 
 	public static void addAppointment() throws ParseException, ClassNotFoundException, SQLException{
 		String place = null;
@@ -234,10 +256,14 @@ public class CalandarHandler{
 		if (meeting.equalsIgnoreCase("Møte")){
 			meetingbol = true;
 			System.out.println("Skriv inn deltager (en om gangen). Avslutt med 'Ferdig'.");
-			String svar = "";
+			String svar = sc.nextLine();
 			while (!svar.equalsIgnoreCase("Ferdig")){
+				if (UserFactory.isUser(svar)){
+					list.add(svar);
+				}
+				else{ System.out.println("Brukeren eksisterer ikke. Skriv inn nytt brukernavn:");}
 				svar = sc.nextLine();
-				list.add(svar);
+
 			}
 			// DATO
 			System.out.println("Skriv inn dato på formen YYYY-MM-DD: ");
@@ -252,7 +278,7 @@ public class CalandarHandler{
 			// Beskrivelse
 			System.out.println("Skriv inn beskrivelse: ");
 			description = sc.nextLine();
-			
+
 			// Reservere møterom
 			System.out.println("Disse rommene er ledige da: ");
 			AppointmentFactory.availableRooms(dateString, startTime, endTime);
@@ -266,28 +292,29 @@ public class CalandarHandler{
 			}
 
 		}
+
 		else if (meeting.equals("Avtale")){ 
-			
+
 			meetingbol = false;
-			
+
 			// DATO
 			System.out.println("Skriv inn dato på formen YYYY-MM-DD: ");
 			String dateString = sc.nextLine();
-			
+
 			// TID
 			System.out.println("Skriv inn starttid på formen hh:mm:ss : ");
 			String startTime = sc.nextLine();
 			System.out.println("Skriv inn sluttid på formen hh:mm:ss : ");
 			String endTime = sc.nextLine();
-			
+
 			// Beskrivelse
 			System.out.println("Skriv inn beskrivelse: ");
 			description = sc.nextLine();
-			
+
 			//Sted
 			System.out.println("Skriv inn sted: ");
 			place = sc.nextLine();
-			
+
 			Appointment a = AppointmentFactory.createAppointment(dateString, startTime, endTime, place, description, meetingbol, username);
 			InviteFactory.createAppointmentInvite(username, a.getId());
 		}
@@ -310,13 +337,30 @@ public class CalandarHandler{
 			default: System.out.println("Skriv inn gyldig tall.");
 			}
 		}
+		else{
+			System.out.println("Hva vil du endre på? \n 1) Endre dato \n 2) Endre starttid \n 3) Endre slutttid");
+			String svar = sc.nextLine();
+			switch (svar){
+			case "1": changeDate(idint);break;
+			case "2": changeStartTime(idint); break;
+			case "3": changeEndTime(idint); break;
+
+			}
+			ArrayList<String> list = InviteFactory.getParticipants(idint);
+			InviteFactory.deleteInviteAppointment(idint);
+			for (String user: list){
+				InviteFactory.createInvite(user, idint);
+			}
+			InviteFactory.updateInviteResponse(username, 2, idint);
+
+		}
 	}
-	
+
 	private static void changeDescription(int id) throws ClassNotFoundException, SQLException {
 		System.out.println("Skriv inn ny beskrivelse: ");
 		String des = sc.nextLine();
 		AppointmentFactory.updateAppointmentDescription(id, des);
-		
+
 	}
 
 
@@ -324,7 +368,7 @@ public class CalandarHandler{
 		System.out.println("Skriv inn nytt sted: ");
 		String place = sc.nextLine();
 		AppointmentFactory.updateAppointmentPlace(id, place);
-		
+
 	}
 
 
@@ -339,7 +383,7 @@ public class CalandarHandler{
 		System.out.println("Skriv inn ny start-tid på formen hh:mm:ss: ");
 		String startTime = sc.nextLine();
 		AppointmentFactory.updateAppointmentStartTime(id, startTime);
-		
+
 	}
 
 
@@ -349,9 +393,36 @@ public class CalandarHandler{
 		int idint = Integer.parseInt(id);
 		if (!AppointmentFactory.isMeeting(idint)){
 			AppointmentFactory.deleteAppointment(idint);
+			InviteFactory.deleteInviteAppointment(idint);
+		}
+		else{
+			if (AppointmentFactory.isMeetingOwner(username, idint)){
+				AppointmentFactory.deleteAppointment(idint);
+			}
+			
 		}
 	}
 
+	public static void giveCancellation() throws ClassNotFoundException, SQLException{
+		ArrayList<Integer> listWhereOwner = AppointmentFactory.getMeetingWhereOwner(username);
+		ArrayList<Integer> acceptedMeetings = InviteFactory.getAcceptedInvitesForThisUse(username);
+		for (int i: acceptedMeetings){
+			if (listWhereOwner.contains(i)){
+				acceptedMeetings.remove(i);
+			}
+		}
+		
+		System.out.println("Du skal på disse møtene:");
+		for (int i: acceptedMeetings){
+			System.out.println("ID: " + i);
+		}
+		
+		System.out.println("Hvilket møte vil du melde avbud for?");
+		String svar = sc.nextLine();
+		// InviteFactory.deleteInviteUser(username); 
+		
+		
+	}
 	public static void changeDate(int id) throws ClassNotFoundException, SQLException{
 		System.out.println("Skriv inn ny dato på format YYYY-MM-DD : ");
 		String datestring = sc.nextLine();
@@ -362,7 +433,7 @@ public class CalandarHandler{
 		LoggedIn=false;
 		System.out.println("Du er nå logget ut.");
 	}
-	
+
 	public static String viewCalendar(String userName, int weekNumber) throws ClassNotFoundException, SQLException{
 		ViewingCalendar = true;
 		String s = "";
@@ -373,7 +444,7 @@ public class CalandarHandler{
 		}
 		return s;
 	}
-	
+
 	private static ArrayList<Appointment> viewCalendarWeek(String userName, int weekNumber) throws ClassNotFoundException, SQLException {
 		ArrayList<Appointment> appointmentList = new ArrayList<Appointment>();
 		ArrayList<Integer> aIDList = InviteFactory.getInviteApointmentID(userName);
@@ -385,11 +456,11 @@ public class CalandarHandler{
 			if (week == weekNumber){
 				appointmentList.add(a);
 			}
-		cal = Calendar.getInstance();
+			cal = Calendar.getInstance();
 		}
 		return appointmentList;	
 	}
-	
+
 	private static void setCalendar(String date){
 		String[] b = date.split("-");
 		int[] d = new int[3];
@@ -398,13 +469,15 @@ public class CalandarHandler{
 		}
 		cal.set(d[0], d[1] - 1, d[2]);
 	}
-	
+
 	private static void incrementWeekNumber(){
 		weekNumber = weekNumber + 1;
 	}
+	
 	private static void decrementWeekNumber(){
 		weekNumber = weekNumber - 1;
 	}
+	
 	private static void defaultWeekNumber(){
 		cal.getInstance();
 		weekNumber = cal.get(Calendar.WEEK_OF_YEAR);

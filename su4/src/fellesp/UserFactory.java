@@ -81,7 +81,21 @@ static DBConnection db;
 			response= rs.getInt(1);
 			list.add(response);
 		}
+		db.close();
 		return list;
+	}
+	
+	public static boolean isUser(String username) throws ClassNotFoundException, SQLException{
+		String query =  String.format("SELECT * FROM User WHERE username='%s'" , username);
+		db.initialize();
+		ResultSet rs=db.makeSingleQuery(query);
+		rs.beforeFirst();
+		if (!rs.next()){
+			db.close();
+			return false;
+		}
+		db.close();
+		return true;
 	}
 
 }

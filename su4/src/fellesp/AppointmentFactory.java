@@ -1,9 +1,7 @@
 package fellesp;
 
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Properties;
 
@@ -83,6 +81,34 @@ public class AppointmentFactory {
 		return a;
 	}
 	
+	public static boolean isMeetingOwner(String username, int aID) throws ClassNotFoundException, SQLException{
+		String query =String.format("SELECT owner FROM Appointment WHERE appointmentID='%s'",aID);
+		db.initialize();
+		ResultSet rs = db.makeSingleQuery(query);
+		rs.beforeFirst();
+		rs.next();
+		String owner = rs.getString(1);
+		if (owner.equals(username)){
+			db.close();
+			return true;
+		}
+		db.close();
+		return false;
+	}
+
+	public static ArrayList<Integer> getMeetingWhereOwner(String username) throws ClassNotFoundException, SQLException{
+		ArrayList<Integer> result = new ArrayList<Integer>();
+		String query = String.format("SELECT appointmentID From Appointment WHERE owner='%s'", username);
+		db.initialize();
+		ResultSet rs = db.makeSingleQuery(query);
+		rs.beforeFirst();
+		while (rs.next()){
+			result.add(rs.getInt(1));
+		}
+		
+		return result;
+	}
+
 	public static int getNextId() throws ClassNotFoundException, SQLException{
 		String query= "SELECT MAX(appointmentID) FROM Appointment ;";
 

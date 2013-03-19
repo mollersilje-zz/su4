@@ -7,15 +7,15 @@ import java.util.ArrayList;
 import java.util.Properties;
 
 public class InviteFactory {
-  
+
 	private static DBConnection db;
-	
-	
+
+
 	public InviteFactory(Properties properties) throws ClassNotFoundException, SQLException
 	{
-		 db=new DBConnection(properties);
+		db=new DBConnection(properties);
 	}
-	
+
 	public static Invite  createInvite(String username, int aID) throws ClassNotFoundException, SQLException
 	{
 		Invite e=new Invite(username, aID);
@@ -24,10 +24,10 @@ public class InviteFactory {
 		db.initialize();
 		db.makeSingleUpdate(query);
 		db.close();
-		
+
 		return e;
 	}
-	
+
 	public static Invite  createAppointmentInvite(String username, int aID) throws ClassNotFoundException, SQLException
 	{
 		Invite e=new Invite(username, aID);
@@ -36,12 +36,12 @@ public class InviteFactory {
 		db.initialize();
 		db.makeSingleUpdate(query);
 		db.close();
-		
+
 		return e;
 	}
-	
-	
-	
+
+
+
 	public int getInviteResponse(String username, int aID) throws ClassNotFoundException, SQLException
 	{
 		String query=String.format("SELECT response FROM Invite WHERE username = '%s' AND appointmentID = '%d'",username, aID);
@@ -50,18 +50,18 @@ public class InviteFactory {
 		int res;
 
 		if (rs.next()) {
-		    res = rs.getInt(1);
+			res = rs.getInt(1);
 		}
 		else {
 			return (Integer) null;
 		}
-		
+
 		rs.close();
 		db.close();
-		
+
 		return res;
 	}
-	
+
 	public static ArrayList<String> getDeclinedUsers(int aID) throws ClassNotFoundException, SQLException{
 		String query = String.format("SELECT username FROM Invite WHERE appointmentID = '%s' AND response = '3';", aID);
 		db.initialize();
@@ -73,10 +73,10 @@ public class InviteFactory {
 		rs.close();
 		db.close();
 
-		
+
 		return list;
 	}
-	
+
 	public static ArrayList<Integer> getInviteApointmentID(String username) throws ClassNotFoundException, SQLException{
 		String query = String.format("SELECT Invite.appointmentID FROM Invite, Appointment WHERE username = '%s' AND response = '2' AND Invite.appointmentID = Appointment.appointmentID Group By date, starttime;",username);
 		db.initialize();
@@ -87,19 +87,47 @@ public class InviteFactory {
 		}
 		rs.close();
 		db.close();
-		
+
 		return list;
 	}
+
+	public static ArrayList<Integer> getAcceptedInvitesForThisUse(String username) throws ClassNotFoundException, SQLException{
+		ArrayList<Integer> result = new ArrayList<Integer>();
+		String query = String.format("SELECT appointmentID FROM Invite WHERE username='%s' AND response=2",username);
+		db.initialize();
+		ResultSet rs = db.makeSingleQuery(query);
+		rs.beforeFirst();
+		while (rs.next()){
+			result.add(rs.getInt(1));
+		}
+		
+		return result;
+	}
 	
-	public void deleteInvite(String username) throws ClassNotFoundException, SQLException
+	public static void deleteInviteUser(String username) throws ClassNotFoundException, SQLException
 	{
 		String query = String.format("DELETE FROM Invite WHERE username = '%s'",username);
 		db.initialize();
 		db.makeSingleUpdate(query);
 		db.close();
 	}
-	
-	
+
+	public static void deleteInviteAppointment(int aID) throws ClassNotFoundException, SQLException
+	{
+		String query = String.format("DELETE FROM Invite WHERE appointmentID = '%d'",aID);
+		db.initialize();
+		db.makeSingleUpdate(query);
+		db.close();
+	}
+
+	public static void deleteInviteAppointmentWhereCancelled(int aID,String username) throws ClassNotFoundException, SQLException{
+		String query = String.format("DELETE FROM Invite WHERE appointmentID='%d' AND username='%s'",aID,username);
+		db.initialize();
+		db.makeSingleUpdate(query);
+		db.close();
+	}
+
+
 	public static void updateInviteResponse(String username, int newResponse, int aID) throws ClassNotFoundException, SQLException
 	{
 		String update = String.format("UPDATE Invite" + " SET response = '%d'" + " WHERE username = '%s'" + " AND appointmentID =' %d'", newResponse, username, aID);
@@ -107,7 +135,7 @@ public class InviteFactory {
 		db.makeSingleUpdate(update);
 		db.close();
 	}
-	
+
 	public static ArrayList<String> getParticipants(int aID) throws ClassNotFoundException, SQLException{
 		ArrayList<String> list = new ArrayList<String>();
 		String query = String.format("SELECT username FROM Invite WHERE appointmentID = '%d'",aID);
@@ -118,10 +146,42 @@ public class InviteFactory {
 		}
 
 		db.close();
-		
 
 		return list;
 	}
+
+	public static ArrayList<Integer> findCancelledAppointments(String username) throws ClassNotFoundException, SQLException{
+		ArrayList<Integer> invitelist = new ArrayList<Integer>();
+		ArrayList<Integer> appointmentlist = new ArrayList<Integer>();
+		ArrayList<Integer> deletedaID = new ArrayList<Integer>();
+
+
+		String query = String.format("SELECT appointmentID FROM Invite WHERE username='%s'",username);
+		db.initialize();
+		ResultSet rs = db.makeSingleQuery(query);
+		rs.beforeFirst();
+		while (rs.next()){
+			invitelist.add(rs.getInt(1));
+		}
+
+		String query2 = String.format("SELECT appointmentID FROM Appointment");
+		ResultSet rs2 = db.makeSingleQuery(query2);
+		rs2.beforeFirst();
+		while (rs2.next()){
+			appointmentlist.add(rs2.getInt(1));
+		}
+
+		
+		for (int idFromInvite: invitelist){
+			if (!appointmentlist.contains(idFromInvite)){
+				deletedaID.add(idFromInvite);
+			}
+		}
+
+		db.close();
+		return deletedaID;
+	}
+
 
 }
 
