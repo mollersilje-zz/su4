@@ -86,16 +86,19 @@ static DBConnection db;
 	}
 	
 	public static boolean isUser(String username) throws ClassNotFoundException, SQLException{
-		String query =  String.format("SELECT * FROM User WHERE username='%s'" , username);
+		String query =  String.format("SELECT username FROM User");
 		db.initialize();
 		ResultSet rs=db.makeSingleQuery(query);
 		rs.beforeFirst();
-		if (!rs.next()){
-			db.close();
-			return false;
+		while (rs.next()){
+			if (rs.getString(1).equals(username)){
+				db.close();
+				return true;
+			}
 		}
 		db.close();
-		return true;
+		return false;
+
 	}
 
 }

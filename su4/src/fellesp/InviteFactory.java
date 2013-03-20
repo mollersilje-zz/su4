@@ -20,7 +20,7 @@ public class InviteFactory {
 	{
 		Invite e=new Invite(username, aID);
 		String query=String.format("insert into Invite " +
-				"(response,username,appointmentID) values (1,'%s', '%d')", username, aID); 
+				"(response,username,appointmentID) values (1,'%s', %d)", username, aID); 
 		db.initialize();
 		db.makeSingleUpdate(query);
 		db.close();
@@ -32,7 +32,7 @@ public class InviteFactory {
 	{
 		Invite e=new Invite(username, aID);
 		String query=String.format("insert into Invite " +
-				"(response,username,appointmentID) values (2,'%s', '%d')", username, aID); 
+				"(response,username,appointmentID) values (2,'%s', %d)", username, aID); 
 		db.initialize();
 		db.makeSingleUpdate(query);
 		db.close();
@@ -44,7 +44,7 @@ public class InviteFactory {
 
 	public int getInviteResponse(String username, int aID) throws ClassNotFoundException, SQLException
 	{
-		String query=String.format("SELECT response FROM Invite WHERE username = '%s' AND appointmentID = '%d'",username, aID);
+		String query=String.format("SELECT response FROM Invite WHERE username = '%s' AND appointmentID = %d",username, aID);
 		db.initialize();
 		ResultSet rs=db.makeSingleQuery(query);
 		int res;
@@ -114,14 +114,14 @@ public class InviteFactory {
 
 	public static void deleteInviteAppointment(int aID) throws ClassNotFoundException, SQLException
 	{
-		String query = String.format("DELETE FROM Invite WHERE appointmentID = '%d'",aID);
+		String query = String.format("DELETE FROM Invite WHERE appointmentID = %d",aID);
 		db.initialize();
 		db.makeSingleUpdate(query);
 		db.close();
 	}
 
 	public static void deleteInviteAppointmentWhereCancelled(int aID,String username) throws ClassNotFoundException, SQLException{
-		String query = String.format("DELETE FROM Invite WHERE appointmentID='%d' AND username='%s'",aID,username);
+		String query = String.format("DELETE FROM Invite WHERE appointmentID= %d AND username='%s'",aID,username);
 		db.initialize();
 		db.makeSingleUpdate(query);
 		db.close();
@@ -130,7 +130,7 @@ public class InviteFactory {
 
 	public static void updateInviteResponse(String username, int newResponse, int aID) throws ClassNotFoundException, SQLException
 	{
-		String update = String.format("UPDATE Invite" + " SET response = '%d'" + " WHERE username = '%s'" + " AND appointmentID =' %d'", newResponse, username, aID);
+		String update = String.format("UPDATE Invite" + " SET response = %d" + " WHERE username = '%s'" + " AND appointmentID = %d", newResponse, username, aID);
 		db.initialize();
 		db.makeSingleUpdate(update);
 		db.close();
@@ -138,7 +138,7 @@ public class InviteFactory {
 
 	public static ArrayList<String> getParticipants(int aID) throws ClassNotFoundException, SQLException{
 		ArrayList<String> list = new ArrayList<String>();
-		String query = String.format("SELECT username FROM Invite WHERE appointmentID = '%d'",aID);
+		String query = String.format("SELECT username FROM Invite WHERE appointmentID = %d",aID);
 		db.initialize();
 		ResultSet rs = db.makeSingleQuery(query);
 		while (rs.next()){

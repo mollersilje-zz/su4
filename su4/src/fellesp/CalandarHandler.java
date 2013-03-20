@@ -5,11 +5,13 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Properties;
 import java.util.Scanner;
-
+import java.util.Date;
 import fellesp.Appointment;
 import fellesp.AppointmentFactory;
 import fellesp.InviteFactory;
@@ -231,21 +233,24 @@ public class CalandarHandler{
 	public static void giveCancellation() throws ClassNotFoundException, SQLException{
 		// KRAV 9
 		ArrayList<Integer> listWhereOwner = AppointmentFactory.getMeetingWhereOwner(username);
-		ArrayList<Integer> acceptedMeetings = InviteFactory.getAcceptedInvitesForThisUse(username);
-		for (int i: acceptedMeetings){
-			if (listWhereOwner.contains(i)){
-				acceptedMeetings.remove(i);
+		ArrayList<Integer> meetings = InviteFactory.getAcceptedInvitesForThisUse(username);
+		ArrayList<Integer> acceptedMeetings = new ArrayList<Integer>();
+		for (int i: meetings){
+			if (!listWhereOwner.contains(i)){
+				acceptedMeetings.add(i);
 			}
 		}
-		
+		if (acceptedMeetings.isEmpty()){
+			System.out.println("Du er ikke deltaker på noen møter. \n");
+			return;
+		}
 		System.out.println("Du skal på disse møtene:");
 		for (int i: acceptedMeetings){
 			System.out.println("ID: " + i);
-		}
-		
+		}		
 		System.out.println("Hvilket møte vil du melde avbud for?");
 		String svar = sc.nextLine();
-		// InviteFactory.deleteInviteUser(username); 
+		appointmentDeleter(svar);
 		
 		
 	}
@@ -284,6 +289,7 @@ public class CalandarHandler{
 			while (!svar.equalsIgnoreCase("Ferdig")){
 				if (UserFactory.isUser(svar)){
 					list.add(svar);
+					System.out.println("Bruker lagt til.");
 				}
 				else{ System.out.println("Brukeren eksisterer ikke. Skriv inn nytt brukernavn:");}
 				svar = sc.nextLine();
@@ -293,12 +299,15 @@ public class CalandarHandler{
 			System.out.println("Skriv inn dato på formen YYYY-MM-DD: ");
 			String dateString = sc.nextLine();
 			// TID
-			System.out.println("Skriv inn starttid på formen hh:mm : ");
-			String startTime = sc.nextLine() + ":00";
-			System.out.println("Skriv inn sluttid på formen hh:mm : ");
-			String endTime = sc.nextLine() + ":00";
-
-
+			String startTime;
+			String endTime;
+			do{
+				System.out.println("Skriv inn starttid på formen hh:mm : ");
+				startTime = sc.nextLine() + ":00";
+				System.out.println("Skriv inn sluttid på formen hh:mm : ");
+				endTime = sc.nextLine() + ":00";
+			} while(endBeforeStart(startTime, endTime));
+				
 			// Beskrivelse
 			System.out.println("Skriv inn beskrivelse: ");
 			description = sc.nextLine();
@@ -317,7 +326,7 @@ public class CalandarHandler{
 
 		}
 
-		else if (meeting.equals("Avtale")){ 
+		else if (meeting.equalsIgnoreCase("Avtale")){ 
 
 			meetingbol = false;
 
@@ -326,10 +335,14 @@ public class CalandarHandler{
 			String dateString = sc.nextLine();
 
 			// TID
-			System.out.println("Skriv inn starttid på formen hh:mm : ");
-			String startTime = sc.nextLine() + ":00";
-			System.out.println("Skriv inn sluttid på formen hh:mm : ");
-			String endTime = sc.nextLine() + ":00";
+			String endTime;
+			String startTime;
+			do{
+				System.out.println("Skriv inn starttid på formen hh:mm : ");
+				startTime = sc.nextLine() + ":00";
+				System.out.println("Skriv inn sluttid på formen hh:mm : ");
+				endTime = sc.nextLine() + ":00";
+			} while(endBeforeStart(startTime, endTime));
 
 			// Beskrivelse
 			System.out.println("Skriv inn beskrivelse: ");
@@ -343,6 +356,18 @@ public class CalandarHandler{
 			InviteFactory.createAppointmentInvite(username, a.getId());
 		}
 	}
+
+	private static boolean endBeforeStart(String startTime, String endTime) throws ParseException {
+		DateFormat sdf = new SimpleDateFormat("hh:mm:ss");
+		Date start = sdf.parse(startTime);
+		Date end = sdf.parse(endTime);
+		if (end.compareTo(start)<0){
+			System.out.println("Sluttid før Starttid. Skriv inn på nytt. \n");
+			return true;
+		}
+		return false;
+	}
+
 
 	public static void changeAppointment() throws ClassNotFoundException, SQLException{
 		ChangingAppointment = true; 
@@ -410,20 +435,33 @@ public class CalandarHandler{
 		AppointmentFactory.updateAppointmentStartTime(id, startTime);
 
 	}
-
-	public static void deleteAppointment() throws ClassNotFoundException, SQLException {
+	
+	public static void deleteAppointment() throws ClassNotFoundException, SQLException{
+		ArrayList<Integer> ownedAppointments = AppointmentFactory.getMeetingWhereOwner(username);
+		if (ownedAppointments.isEmpty()){
+			System.out.println("Du er ikke eier for noen avtaler. \n");
+			return;
+		}
+		System.out.println("Du er eier for disse avtalene:");
+		for (int i: ownedAppointments){
+			System.out.println("ID: " + i);
+		}
 		System.out.println("Skriv inn avtaleID som du ønsker å slette: ");
 		String id = sc.nextLine();
+		appointmentDeleter(id);
+	}
+
+	public static void appointmentDeleter(String id) throws ClassNotFoundException, SQLException {
+		
 		int idint = Integer.parseInt(id);
 		if (!AppointmentFactory.isMeeting(idint)){
 			AppointmentFactory.deleteAppointment(idint);
 			InviteFactory.deleteInviteAppointment(idint);
-		}
-		else{
-			if (AppointmentFactory.isMeetingOwner(username, idint)){
+		} else if (AppointmentFactory.isMeetingOwner(username, idint)){
 				AppointmentFactory.deleteAppointment(idint);
-			}
-			
+				InviteFactory.deleteInviteAppointment(idint);
+		} else {
+				InviteFactory.updateInviteResponse(username, 3, idint);
 		}
 	}
 	
@@ -495,51 +533,13 @@ public class CalandarHandler{
 		String reply = "Ikke alle har besvart invitasjonen";
 		boolean someDeclined = InviteFactory.isMeetingDeclined(aID);
 		boolean notAllAnswered = InviteFactory.isMeetingUnanswered(aID);
-		if (someDeclined) {
-			reply = "Noen har avslått møtet";
+		if (someDeclined && notAllAnswered) {
+			reply = "Noen har avslått møtet, men ikke alle har svart";
+		} else if (someDeclined && !notAllAnswered) {
+			reply = "Noen har avslått møtet, og alle har svart";
 		} else if (!notAllAnswered && !someDeclined) {
 			reply = "Alle har godtatt møtet";
 		}
 		return reply;
 	}
-	
-	/*private static boolean isWaitingForAnswer() throws ClassNotFoundException, SQLException {
-		System.out.println("Hvilket møte: ");
-		String aID = sc.nextLine();
-		boolean mote = InviteFactory.isMeetingUnanswered(aID);
-		if (mote) {
-			System.out.println("Møtet er ubesvart");
-		}
-		else if (!mote) {
-			System.out.println("Alle har besvart");
-		}
-		return mote;
-	}
-	
-	private static boolean isAccepted() throws ClassNotFoundException, SQLException {
-		System.out.println("Hvilket møte: ");
-		String aID = sc.nextLine();
-		boolean mote = InviteFactory.isMeetingAccepted(aID);
-		if (mote) {
-			System.out.println("Alle har sagt ja");
-		}
-		else if (!mote) {
-			System.out.println("Ikke alle har sagt ja");
-		}
-		return mote;
-	}
-	
-	private static boolean isDeclined() throws ClassNotFoundException, SQLException {
-		System.out.println("Hvilket møte: ");
-		String aID = sc.nextLine();
-		boolean mote = InviteFactory.isMeetingDeclined(aID);
-		if (mote) {
-			System.out.println("En eller flere har avslått");
-		}
-		else if (!mote) {
-			System.out.println("Ingen har avslått");
-		}
-		return mote;
-	}*/
-
 }
